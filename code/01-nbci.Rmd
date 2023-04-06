@@ -1,0 +1,41 @@
+Pulling info from the following studies for evaluation
+
+
+```{bash}
+prefetch <SRR19782039> #Valsartan exposed
+prefetch <SRR13013756> #hypoxia
+prefetch <SRR7725722> #DSP toxins
+prefetch <SRR16771870> #17 a-Ethinylestradiol (EE2)
+```
+
+```{bash}
+fastq-dump --gzip --split-files <SRR19782039>
+fastq-dump --gzip --split-files <SRR13013756>
+fastq-dump --gzip --split-files <SRR7725722>
+fastq-dump --gzip --split-files <SRR16771870>
+```
+
+```{r}
+
+library(DESeq2)
+library(Rsubread)
+
+# Set the working directory to where the FASTQ files are located
+setwd("<path/to/FASTQ/files>")
+
+# Load the FASTQ files
+files <- list.files(pattern=".fastq.gz$")
+names(files) <- gsub(".fastq.gz$", "", files)
+samples <- data.frame(sampleName = names(files), fileName = files)
+
+# Align the reads to a reference genome
+index <- "path/to/reference/genome"
+align <- align(index, files, output.format="BAM", nthreads=8)
+
+# Perform differential gene expression analysis
+countTable <- featureCounts(files, annot.ext="path/to/gene/annotation", isGTFAnnotationFile=TRUE, nthreads=8)
+dds <- DESeqDataSetFromMatrix(countData=countTable[, 7:ncol(countTable)], colData=samples, design=~sampleName)
+dds <- DESeq(dds)
+res <- results(dds)
+```
+
