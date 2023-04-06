@@ -1,0 +1,7 @@
+Pulling info from the following studies for evaluation
+
+Section 1 - load library
+Section 2 - pull data files
+Section 3 - replicate 4/4 workflow for qc
+
+
