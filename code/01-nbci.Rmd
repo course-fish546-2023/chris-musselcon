@@ -1,5 +1,6 @@
 Pulling info from the following studies for evaluation
 
+<<<<<<< HEAD
 
 ```{bash}
 prefetch <SRR19782039> #Valsartan exposed
@@ -38,4 +39,10 @@ dds <- DESeqDataSetFromMatrix(countData=countTable[, 7:ncol(countTable)], colDat
 dds <- DESeq(dds)
 res <- results(dds)
 ```
+=======
+Section 1 - load library
+Section 2 - pull data files
+Section 3 - replicate 4/4 workflow for qc
+
+>>>>>>> 9f6ea84556eae9e3ac73969033039c7bc337ed77
 
