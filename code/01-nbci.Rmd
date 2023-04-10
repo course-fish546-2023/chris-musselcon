@@ -49,11 +49,12 @@ Query Sequence 1: Exposure to Valsartan & Carbamazepine
 #Query sequence 1: 
 curl https://trace.ncbi.nlm.nih.gov/Traces/?run=SRR19782039 \
 -k \
-> /home/shared/8TB_HDD_02/cnmntgna/Github/chris-musselcon/data/VC-Exposure
+> /home/shared/8TB_HDD_02/cnmntgna/GitHub/chris-musselcon/data/VC-Exposure
 ```
 
 Query Sequence 2: Exposure to a synthetic hormone 17 a-Ethinylestradiol (EE2)
 ```{bash}
+# I know I need to put the sequences in a folder, but there has to be a format mistake I am making to get this in here.
 #Query sequence 1: 
 curl https://trace.ncbi.nlm.nih.gov/Traces/?run=SRR19782039 \
 -k \
@@ -75,7 +76,7 @@ curl https://trace.ncbi.nlm.nih.gov/Traces/?run=SRR19782039 \
 -k \
 > home/shared/8TB_HDD_02/cnmntgna/Github/chris-musselcon/data/Hypoxia
 ```
-
+I  HAVE NOT ALTERED ANY OF THE CODE BELOW TO REFLECT MY PROJECT SEQUENCES
 ```{bash}
 head ../home/shared/8TB_HDD_02/cnmntgna/data/Ab_4denovo_CLC6_a.fa
 echo "How many sequences are there?"
