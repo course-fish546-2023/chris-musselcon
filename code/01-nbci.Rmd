@@ -1,57 +1,65 @@
-Pulling info from the following studies for evaluation
 
-<<<<<<< HEAD
-#Keep these accenssion codes
 
 ```{bash}
-prefetch <SRR19782039> #Valsartan exposed
-prefetch <SRR13013756> #hypoxia
-prefetch <SRR7725722> #DSP toxins
-prefetch <SRR16771870> #17 a-Ethinylestradiol (EE2)
+# Experimented with another way to load the data - not intuitive, just keeping for the file accession numbers
+# prefetch <SRR19782039> #Valsartan exposed
+# prefetch <SRR13013756> #hypoxia
+# prefetch <SRR7725722> #DSP toxins
+# prefetch <SRR16771870> #17 a-Ethinylestradiol (EE2)
+```
+
+
+```{bash}
+#keeping this chunk here to remind me where my BLAST is located, DO NOT RUN
+# cd /home/shared/8TB_HDD_02/cnmntgna/Applications/bioinfo/
+# curl -O https://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/ncbi-blast-2.13.0+-x64-linux.tar.gz
+# tar -xf ncbi-blast-2.13.0+-x64-linux.tar.gz
 ```
 
 ```{bash}
-fastq-dump --gzip --split-files <SRR19782039>
-fastq-dump --gzip --split-files <SRR13013756>
-fastq-dump --gzip --split-files <SRR7725722>
-fastq-dump --gzip --split-files <SRR16771870>
+#Project path
+ ls /home/shared/8TB_HDD_02/cnmntgna/GitHub/chris-musselcon
+
 ```
 
 ```{bash}
-cd /home/shared/8TB_HDD_02/cnmntgna/Applications/bioinfo/
-curl -O https://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/ncbi-blast-2.13.0+-x64-macosx.tar.gz
-tar -xf ncbi-blast-2.13.0+-x64-macosx.tar.gz
+
 ```
 
 ```{bash}
-ls /home/shared/8TB_HDD_02/cnmntgna/Applications/bioinfo/
+
+#keeping to redo database if necessary
+# cd /home/shared/8TB_HDD_02/cnmntgna/data
+# curl -O https://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/complete/uniprot_sprot.fasta.gz
+# mv uniprot_sprot.fasta.gz uniprot_sprot_r2023_01.fasta.gz
+# gunzip -k uniprot_sprot_r2023_01.fasta.gz
+# ls /home/shared/8TB_HDD_02/cnmntgna/data
 ```
 
 ```{bash}
-/home/shared/8TB_HDD_02/cnmntgna/Applications/bioinfo/ncbi-blast-2.13.0+/bin/blastx -h
+# keeping for database purposes
+#/home/shared/8TB_HDD_02/cnmntgna/Applications/bioinfo/ncbi-blast-2.13.0+/bin/makeblastdb \
+#-in /home/shared/8TB_HDD_02/cnmntgna/data/uniprot_sprot_r2023_01.fasta \
+#-dbtype prot \
+#-out /home/shared/8TB_HDD_02/cnmntgna/output/blastdb/uniprot_sprot_r2023_01
 ```
 
+Query Sequence 1: Exposure to Valsartan & Carbamazepine
 ```{bash}
-cd /home/shared/8TB_HDD_02/cnmntgna/data
-curl -O https://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/complete/uniprot_sprot.fasta.gz
-mv uniprot_sprot.fasta.gz uniprot_sprot_r2023_01.fasta.gz
-gunzip -k uniprot_sprot_r2023_01.fasta.gz
-ls ../data
-```
-
-```{bash}
-# stuck here, not sure what the error means
-/home/shared/8TB_HDD_02/cnmntgna/Applications/bioinfo/ncbi-blast-2.13.0+/bin/makeblastdb \
--in /home/shared/8TB_HDD_02/cnmntgna/data/uniprot_sprot_r2023_01.fasta \
--dbtype prot \
--out /home/shared/8TB_HDD_02/cnmntgna/output/blastdb/uniprot_sprot_r2023_01
-```
-
-```{bash}
-curl https://eagle.fish.washington.edu/cnidarian/Ab_4denovo_CLC6_a.fa \
+#Query sequence 1: 
+curl https://trace.ncbi.nlm.nih.gov/Traces/?run=SRR19782039 \
 -k \
-> /home/shared/8TB_HDD_02/cnmntgna/data/Ab_4denovo_CLC6_a.fa
+> /home/shared/8TB_HDD_02/cnmntgna/data/VC-Exposure
 ```
+
+Query Sequence 2: Exposure to a synthetic hormone 17 a-Ethinylestradiol (EE2)
+
+
+Query Sequence 3: Diarrhetic Shellfish Poisoning (DSP) toxins associated with Harmful Algal Blooms (HABs)
+
+
+Query Sequence 4: Hypoxia
+
 
 ```{bash}
 head ../home/shared/8TB_HDD_02/cnmntgna/data/Ab_4denovo_CLC6_a.fa
