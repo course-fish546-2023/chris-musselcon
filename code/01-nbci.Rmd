@@ -49,17 +49,32 @@ Query Sequence 1: Exposure to Valsartan & Carbamazepine
 #Query sequence 1: 
 curl https://trace.ncbi.nlm.nih.gov/Traces/?run=SRR19782039 \
 -k \
-> /home/shared/8TB_HDD_02/cnmntgna/data/VC-Exposure
+> /home/shared/8TB_HDD_02/cnmntgna/Github/chris-musselcon/data/VC-Exposure
 ```
 
 Query Sequence 2: Exposure to a synthetic hormone 17 a-Ethinylestradiol (EE2)
-
+```{bash}
+#Query sequence 1: 
+curl https://trace.ncbi.nlm.nih.gov/Traces/?run=SRR19782039 \
+-k \
+> /home/shared/8TB_HDD_02/cnmntgna/Github/chris-musselcon/data/EE2
+```
 
 Query Sequence 3: Diarrhetic Shellfish Poisoning (DSP) toxins associated with Harmful Algal Blooms (HABs)
-
+```{bash}
+#Query sequence 1: 
+curl https://trace.ncbi.nlm.nih.gov/Traces/?run=SRR19782039 \
+-k \
+> home/shared/8TB_HDD_02/cnmntgna/Github/chris-musselcon/data/DSP-HAB
+```
 
 Query Sequence 4: Hypoxia
-
+```{bash}
+#Query sequence 1: 
+curl https://trace.ncbi.nlm.nih.gov/Traces/?run=SRR19782039 \
+-k \
+> home/shared/8TB_HDD_02/cnmntgna/Github/chris-musselcon/data/Hypoxia
+```
 
 ```{bash}
 head ../home/shared/8TB_HDD_02/cnmntgna/data/Ab_4denovo_CLC6_a.fa
