@@ -9,6 +9,8 @@ Existing RNA-Seq data was retrieved from the following complete RNASeq data avai
 * [Diarrhetic Shellfish Poisoning (DSP) toxins associated with Harmful Algal Blooms (HABs)](https://www.ncbi.nlm.nih.gov/sra/SRX4582204[accn])
 * [Hypoxia](https://www.ncbi.nlm.nih.gov/sra/SRX9464766[accn])  
 
+The reference genome for [*Mytilus galloprovincialis*](https://www.ncbi.nlm.nih.gov/data-hub/genome/GCA_025277285.1/) is the most recent full genome assembly, also from NCBI
+
 **Data Integrity**  
 *
 
