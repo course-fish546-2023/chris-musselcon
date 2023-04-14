@@ -1,0 +1,19 @@
+prefetch SRR390728
+fastq-dump SRR390728
+seqtk seq -a SRR390728.fastq > SRR390728.fasta
+
+install.packages("SRAdb")
+biocLite("SRAtoolkit")
+
+library(SRAdb)
+library(SRAtoolkit)
+
+sratoolkit::prefetch("SRR390728")
+
+sratoolkit::fastqDump("SRR390728")
+
+library(Biostrings)
+fastq.file <- file.path(".", "SRR390728.fastq")
+fasq.file <- file.path(".", "SRR390728.fasta")
+fastq <- readDNAStringSet(fastq.file)
+writeXStringSet(fastq, fasq.file)

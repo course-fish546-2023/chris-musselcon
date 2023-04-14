@@ -2,12 +2,27 @@
 
 ```{bash}
 # Experimented with another way to load the data - not intuitive, just keeping for the file accession numbers
-# prefetch <SRR19782039> #Valsartan exposed
-# prefetch <SRR13013756> #hypoxia
-# prefetch <SRR7725722> #DSP toxins
-# prefetch <SRR16771870> #17 a-Ethinylestradiol (EE2)
+prefetch SRR19782039 #Valsartan exposed
+# prefetch SRR13013756 #hypoxia
+# prefetch SRR7725722 #DSP toxins
+# prefetch SRR16771870 #17 a-Ethinylestradiol (EE2)
 ```
 
+```{bash}
+
+vdb-config --interactive
+
+/home/shared/sratoolkit.2.11.2-ubuntu64/bin/fasterq-dump.2.11.2 \
+
+/home/shared/sratoolkit.2.11.2-ubuntu64/bin/fasterq-dump.2.11.2
+--outdir /home/shared/8TB_HDD_02/cnmntgna/GitHub/chris-musselcon/output/ncbi  \
+--split-files \
+--threads 27 \
+--mem 100GB \
+--progress \
+SRR19782039
+```
+This looks like a command line code for downloading a fastq file from the NCBI SRA database using SRA Toolkit. The `--interactive` option may allow for interactive configuration of the command-line arguments. The `--outdir` option specifies the output directory for the fastq files, and the `--split-files` option splits the fastq files into separate files for the forward and reverse reads. The `--threads` option sets the number of threads to be used, the `--mem` option sets the maximum memory usage, and the `--progress` option shows the progress of the download. Finally, `SRR19782039` specifies the SRA accession number of the file to be downloaded.
 
 ```{bash}
 #keeping this chunk here to remind me where my BLAST is located, DO NOT RUN
