@@ -17,3 +17,37 @@ fastq.file <- file.path(".", "SRR390728.fastq")
 fasq.file <- file.path(".", "SRR390728.fasta")
 fastq <- readDNAStringSet(fastq.file)
 writeXStringSet(fastq, fasq.file)
+
+
+EVERYTHING IS LEFT OVER HERE - GRAVEYARD
+```{bash}
+#Query sequence 1: 
+curl https://sra-downloadb.be-md.ncbi.nlm.nih.gov/sos2/sra-pub-zq-18/SRR019/19782/SRR19782039/SRR19782039.lite.1 \
+-k \
+> /home/shared/8TB_HDD_02/cnmntgna/GitHub/chris-musselcon/data/VC-Exposure/exposure
+```
+
+Query Sequence 2: Exposure to a synthetic hormone 17 a-Ethinylestradiol (EE2)
+```{bash}
+# I know I need to put the sequences in a folder, but there has to be a format mistake I am making to get this in here.
+#Query sequence 1: 
+curl https://sra-downloadb.be-md.ncbi.nlm.nih.gov/sos3/sra-pub-zq-24/SRR016/16771/SRR16771870/SRR16771870.lite.1 \
+-k \
+> /home/shared/8TB_HDD_02/cnmntgna/Github/chris-musselcon/data/EE2/hormone
+```
+
+Query Sequence 3: Diarrhetic Shellfish Poisoning (DSP) toxins associated with Harmful Algal Blooms (HABs)
+```{bash}
+#Query sequence 1: 
+curl https://trace.ncbi.nlm.nih.gov/Traces/?run=SRR19782039 \
+-k \
+> home/shared/8TB_HDD_02/cnmntgna/Github/chris-musselcon/data/DSP-HAB
+```
+
+Query Sequence 4: Hypoxia
+```{bash}
+#Query sequence 1: 
+curl https://trace.ncbi.nlm.nih.gov/Traces/?run=SRR19782039 \
+-k \
+> home/shared/8TB_HDD_02/cnmntgna/Github/chris-musselcon/data/Hypoxia
+```
