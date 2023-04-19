@@ -36,9 +36,13 @@ unzip GCA_025277285.1.zip
 ```
 
 ```{r}
+getwd()
 
 # QC time
+# QC the first sequence - VC
+library(Biostrings)
 
+fastq <- readDNAStringSet("~ncbi/SRR7725722_1.fastq")
 
 
 ```
