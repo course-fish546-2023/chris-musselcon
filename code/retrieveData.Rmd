@@ -2,18 +2,43 @@
 
 ```{bash}
 # Experimented with another way to load the data - not intuitive, just keeping for the file accession numbers
-prefetch SRR19782039 #Valsartan exposed
+# prefetch SRR19782039 #Valsartan exposed
 # prefetch SRR13013756 #hypoxia
 # prefetch SRR7725722 #DSP toxins
 # prefetch SRR16771870 #17 a-Ethinylestradiol (EE2)
 ```
 
 ```{bash}
+# Pull out all of the sequences from the exposures
 
 /home/shared/sratoolkit.3.0.2-ubuntu64/bin/./fasterq-dump \
 --outdir /home/shared/8TB_HDD_02/cnmntgna/GitHub/chris-musselcon/output/ncbi \
 --progress \
-SRR19782039
+SRR19782039 \
+SRR13013756 \
+SRR7725722 \
+SRR16771870 
+
+
+```
+
+```{bash}
+
+# load my reference genome into my data folder
+
+cd ../data
+
+curl -OJX GET "https://api.ncbi.nlm.nih.gov/datasets/v2alpha/genome/accession/GCA_025277285.1/download?include_annotation_type=GENOME_FASTA,GENOME_GFF,RNA_FASTA,CDS_FASTA,PROT_FASTA,SEQUENCE_REPORT&filename=GCA_025277285.1.zip" -H "Accept: application/zip"
+
+
+unzip GCA_025277285.1.zip
+
+```
+
+```{r}
+
+# QC time
+
 
 
 ```
@@ -54,37 +79,7 @@ SRR19782039
 ```
 
 Query Sequence 1: Exposure to Valsartan & Carbamazepine
-```{bash}
-#Query sequence 1: 
-curl https://sra-downloadb.be-md.ncbi.nlm.nih.gov/sos2/sra-pub-zq-18/SRR019/19782/SRR19782039/SRR19782039.lite.1 \
--k \
-> /home/shared/8TB_HDD_02/cnmntgna/GitHub/chris-musselcon/data/VC-Exposure/exposure
-```
 
-Query Sequence 2: Exposure to a synthetic hormone 17 a-Ethinylestradiol (EE2)
-```{bash}
-# I know I need to put the sequences in a folder, but there has to be a format mistake I am making to get this in here.
-#Query sequence 1: 
-curl https://sra-downloadb.be-md.ncbi.nlm.nih.gov/sos3/sra-pub-zq-24/SRR016/16771/SRR16771870/SRR16771870.lite.1 \
--k \
-> /home/shared/8TB_HDD_02/cnmntgna/Github/chris-musselcon/data/EE2/hormone
-```
-
-Query Sequence 3: Diarrhetic Shellfish Poisoning (DSP) toxins associated with Harmful Algal Blooms (HABs)
-```{bash}
-#Query sequence 1: 
-curl https://trace.ncbi.nlm.nih.gov/Traces/?run=SRR19782039 \
--k \
-> home/shared/8TB_HDD_02/cnmntgna/Github/chris-musselcon/data/DSP-HAB
-```
-
-Query Sequence 4: Hypoxia
-```{bash}
-#Query sequence 1: 
-curl https://trace.ncbi.nlm.nih.gov/Traces/?run=SRR19782039 \
--k \
-> home/shared/8TB_HDD_02/cnmntgna/Github/chris-musselcon/data/Hypoxia
-```
 I  HAVE NOT ALTERED ANY OF THE CODE BELOW TO REFLECT MY PROJECT SEQUENCES
 ```{bash}
 head ../home/shared/8TB_HDD_02/cnmntgna/data/Ab_4denovo_CLC6_a.fa
@@ -201,5 +196,5 @@ Section 1 - load library
 Section 2 - pull data files
 Section 3 - replicate 4/4 workflow for qc
 
->>>>>>> 9f6ea84556eae9e3ac73969033039c7bc337ed77
+
 
