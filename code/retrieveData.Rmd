@@ -27,178 +27,45 @@ SRR16771870
 # load my reference genome into my data folder
 
 cd ../data
+ls
 
 curl -OJX GET "https://api.ncbi.nlm.nih.gov/datasets/v2alpha/genome/accession/GCA_025277285.1/download?include_annotation_type=GENOME_FASTA,GENOME_GFF,RNA_FASTA,CDS_FASTA,PROT_FASTA,SEQUENCE_REPORT&filename=GCA_025277285.1.zip" -H "Accept: application/zip"
 
-
-unzip GCA_025277285.1.zip
-
+# the abovve command creates a file that is unzipped, no need for this
+# unzip GCA_025277285.1.zip
+# cannot move this, unsure why and I don't need to I just wanted to keep stuff in the same place
+cd ../ncbi_dataset/data/GCA_025277285.1
+ls
+# moving it to the home data folder out of the one created
+mv GCA_025277285.1_MgalMED_genomic.fna ~/chris-musselcon/data
 ```
 
 ```{r}
-getwd()
 
 # QC time
 # QC the first sequence - VC
 library(Biostrings)
-
 fastq <- readDNAStringSet("~ncbi/SRR7725722_1.fastq")
-
-
-```
-
-```{bash}
-#keeping this chunk here to remind me where my BLAST is located, DO NOT RUN
-# cd /home/shared/8TB_HDD_02/cnmntgna/Applications/bioinfo/
-# curl -O https://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/ncbi-blast-2.13.0+-x64-linux.tar.gz
-# tar -xf ncbi-blast-2.13.0+-x64-linux.tar.gz
-```
-
-```{bash}
-#Project path
- ls /home/shared/8TB_HDD_02/cnmntgna/GitHub/chris-musselcon
+read_lengths <- nchar(fastq)
+summary(read_lengths)
+hist(read_lengths)
+filtered_fastq <- FastqSampler(fastq, sample.keep = "highQuality")
+writeXStringSet(filtered_fastq, "path/to/filtered_file.fastq")
 
 ```
-
-```{bash}
-
-```
-
-```{bash}
-
-#keeping to redo database if necessary
-# cd /home/shared/8TB_HDD_02/cnmntgna/data
-# curl -O https://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/complete/uniprot_sprot.fasta.gz
-# mv uniprot_sprot.fasta.gz uniprot_sprot_r2023_01.fasta.gz
-# gunzip -k uniprot_sprot_r2023_01.fasta.gz
-# ls /home/shared/8TB_HDD_02/cnmntgna/data
-```
-
-```{bash}
-# keeping for database purposes
-#/home/shared/8TB_HDD_02/cnmntgna/Applications/bioinfo/ncbi-blast-2.13.0+/bin/makeblastdb \
-#-in /home/shared/8TB_HDD_02/cnmntgna/data/uniprot_sprot_r2023_01.fasta \
-#-dbtype prot \
-#-out /home/shared/8TB_HDD_02/cnmntgna/output/blastdb/uniprot_sprot_r2023_01
-```
-
-Query Sequence 1: Exposure to Valsartan & Carbamazepine
-
-I  HAVE NOT ALTERED ANY OF THE CODE BELOW TO REFLECT MY PROJECT SEQUENCES
-```{bash}
-head ../home/shared/8TB_HDD_02/cnmntgna/data/Ab_4denovo_CLC6_a.fa
-echo "How many sequences are there?"
-grep -c ">" ../data/Ab_4denovo_CLC6_a.fa
-```
-
-```{bash}
-/home/shared/8TB_HDD_02/cnmntgna/Applications/bioinfo/ncbi-blast-2.13.0+/bin/blastx \
--query ../data/Ab_4denovo_CLC6_a.fa \
--db ../blastdb/uniprot_sprot_r2023_01 \
--out ../output/Ab_4-uniprot_blastx.tab \
--evalue 1E-20 \
--num_threads 20 \
--max_target_seqs 1 \
--outfmt 6
-```
-
-```{bash}
-head -2 ../home/shared/8TB_HDD_02/cnmntgna/output/Ab_4-uniprot_blastx.tab
-wc -l /home/shared/8TB_HDD_02/cnmntgna/output/Ab_4-uniprot_blastx.tab
-```
-
-```{bash}
-curl -O "Accept: text/plain; format=tsv" "https://rest.uniprot.org/uniprotkb/search?query=reviewed:true+AND+organism_id:9606"
-```
-
-```{bash}
-curl -O -H "Accept: text/plain; format=tsv" "https://rest.uniprot.org/uniprotkb/stream?compressed=true&fields=accession%2Creviewed%2Cid%2Cprotein_name%2Cgene_names%2Corganism_name%2Clength%2Cgo_f%2Cgo%2Cgo_p%2Cgo_c%2Cgo_id%2Ccc_interaction%2Cec%2Cxref_reactome%2Cxref_unipathway%2Cxref_interpro&format=tsv&query=%28%2A%29%20AND%20%28reviewed%3Atrue%29"
-```
-
-```{bash}
-head -2 /home/shared/8TB_HDD_02/cnmntgna/output/Ab_4-uniprot_blastx.tab
-wc -l ../output/Ab_4-uniprot_blastx.tab
-```
-
-```{bash}
-tr '|' '\t' < /home/shared/8TB_HDD_02/cnmntgna/output/Ab_4-uniprot_blastx.tab | head -2
-```
-
-```{bash}
-tr '|' '\t' < /home/shared/8TB_HDD_02/cnmntgna/output/Ab_4-uniprot_blastx.tab \
-> ../output/Ab_4-uniprot_blastx_sep.tab
-```
-
-```{bash}
-head -2 /home/shared/8TB_HDD_02/cnmntgna/data/uniprot_table_r2023_01.tab
-wc -l ../data/uniprot_table_r2023_01.tab
-```
-
 ```{r}
-library(tidyverse)
-install.packages("kableExtra")
-library("kableExtra")
-```
-
-```{r}
-bltabl <- read.csv("../output/Ab_4-uniprot_blastx_sep.tab", sep = '\t', header = FALSE)
-spgo <- read.csv("../data/uniprot_table_r2023_01.tab", sep = '\t', header = TRUE)
-str(spgo)
-```
-
-```{r}
-kbl(
-head(
-  left_join(bltabl, spgo,  by = c("V3" = "Entry")) %>%
-  select(V1, V3, V13, Protein.names, Organism, Gene.Ontology..biological.process., Gene.Ontology.IDs) %>% mutate(V1 = str_replace_all(V1, 
-            pattern = "solid0078_20110412_FRAG_BC_WHITE_WHITE_F3_QV_SE_trimmed", replacement = "Ab"))
-)
-) %>%
-  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
-```
-
-```{r}
-left_join(bltabl, spgo,  by = c("V3" = "Entry")) %>%
-  select(V1, V3, V13, Protein.names, Organism, Gene.Ontology..biological.process., Gene.Ontology.IDs) %>% mutate(V1 = str_replace_all(V1, 
-            pattern = "solid0078_20110412_FRAG_BC_WHITE_WHITE_F3_QV_SE_trimmed", replacement = "Ab")) %>%
-  write_delim("../output/blast_annot_go.tab", delim = '\t')
-```
-
-```{r}
-annot_tab <- read.csv("../output/blast_annot_go.tab", sep = '\t', header = TRUE)
+# more qc options in this package
+qualityScoreDistribution
+GCcontent
+DkMer
+trimLRPatterns()
+trimLowQuality
+subsetByWidth
+alignQualityStats
 ```
 
 
 
-Start here for the 'try it myself' code
-
-```{r}
-
-library(DESeq2)
-library(Rsubread)
-
-# Set the working directory to where the FASTQ files are located
-setwd("<path/to/FASTQ/files>")
-
-# Load the FASTQ files
-files <- list.files(pattern=".fastq.gz$")
-names(files) <- gsub(".fastq.gz$", "", files)
-samples <- data.frame(sampleName = names(files), fileName = files)
-
-# Align the reads to a reference genome
-index <- "path/to/reference/genome"
-align <- align(index, files, output.format="BAM", nthreads=8)
-
-# Perform differential gene expression analysis
-countTable <- featureCounts(files, annot.ext="path/to/gene/annotation", isGTFAnnotationFile=TRUE, nthreads=8)
-dds <- DESeqDataSetFromMatrix(countData=countTable[, 7:ncol(countTable)], colData=samples, design=~sampleName)
-dds <- DESeq(dds)
-res <- results(dds)
-```
-=======
-Section 1 - load library
-Section 2 - pull data files
-Section 3 - replicate 4/4 workflow for qc
 
 
 
