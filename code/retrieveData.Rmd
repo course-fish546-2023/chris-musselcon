@@ -43,25 +43,42 @@ mv GCA_025277285.1_MgalMED_genomic.fna ~/chris-musselcon/data
 ```{r}
 
 # QC time
-# QC the first sequence - VC
-library(Biostrings)
-fastq <- readDNAStringSet("~ncbi/SRR7725722_1.fastq")
-read_lengths <- nchar(fastq)
-summary(read_lengths)
-hist(read_lengths)
-filtered_fastq <- FastqSampler(fastq, sample.keep = "highQuality")
-writeXStringSet(filtered_fastq, "path/to/filtered_file.fastq")
+# Code from the internet, will try fastqc first and then go to biostrings if stuck
+# library(Biostrings)
+#fastq <- readDNAStringSet("~ncbi/SRR7725722_1.fastq")
+#read_lengths <- nchar(fastq)
+#summary(read_lengths)
+#hist(read_lengths)
+#filtered_fastq <- FastqSampler(fastq, sample.keep = "highQuality")
+#writeXStringSet(filtered_fastq, "path/to/filtered_file.fastq")
+# more qc options in this package
+#qualityScoreDistribution
+#GCcontent
+#DkMer
+#trimLRPatterns()
+#trimLowQuality
+#subsetByWidth
+#alignQualityStats
+```
+```{bash}
+pwd
+cd ../output
+pwd
+ls
 
 ```
 ```{r}
-# more qc options in this package
-qualityScoreDistribution
-GCcontent
-DkMer
-trimLRPatterns()
-trimLowQuality
-subsetByWidth
-alignQualityStats
+if (!require("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+
+BiocManager::install("ShortRead")
+
+```
+
+```{r}
+library(ShortRead)
+
+fastq <- readFastq("/home/shared/8TB_HDD_02/cnmntgna/output/ncbi/SRR7725722_1.fastq")
 ```
 
 
