@@ -50,15 +50,48 @@ cd ../data
 curl -OJX GET "https://api.ncbi.nlm.nih.gov/datasets/v2alpha/genome/accession/GCA_025277285.1/download?include_annotation_type=GENOME_FASTA,GENOME_GFF,RNA_FASTA,CDS_FASTA,PROT_FASTA,SEQUENCE_REPORT&filename=GCA_025277285.1.zip" -H "Accept: application/zip"
 
 ```
-
-
-### Kallisto
 ```{bash}
 
-cd ../home/shared/kallisto/kallisto \
+#couldn't make this work so I went over to terminal and did it
+
+cd .
+ls
+ unzip GCA_025277285.1.zip
+````
+### 
+### Kallisto
+```{bash}
+# this code was with the chunk below but giving me issues so I separated to figure out what was up
+cd /home/shared/kallisto
+
+```
+inspect
+```{bash}
+
+head ../data/ncbi_dataset/data/GCA_900618805.1/*.fna
+
+```
+
+```{bash}
+
+/home/shared/kallisto/kallisto index -h
+
+```
+```{bash}
+chmod 777 ../data/ncbi_dataset/data/GCA_900618805.1/cds_from_genomic.fna
+
+```
+# Create the index file to align my short read files to the genes from the MGAL_10
+```{bash}
+
+head ../data/ncbi_dataset/data/GCA_900618805.1/cds_from_genomic.fna
+
+/home/shared/kallisto/kallisto \
 index -i \
-../data/cgigas_roslin_rna.index \
-../data/rna.fna
+../data/MGAL_cds.index \ 
+../data/ncbi_dataset/data/GCA_900618805.1/cds_from_genomic.fna
+
+
 ```
 
 ```{r}
