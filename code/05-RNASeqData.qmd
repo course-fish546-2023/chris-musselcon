@@ -1,0 +1,113 @@
+---
+title: "RNA-seq Data Retrieval & Kallisto Evaluation"
+author: Chris
+date: "`r format(Sys.time(), '%d %B, %Y')`"  
+output: 
+  html_document:
+    theme: readable
+    highlight: zenburn
+    toc: true
+    toc_float: true
+    number_sections: true
+    code_folding: show
+    code_download: true
+---
+
+```{r setup, include=FALSE}
+library(knitr)
+library(tidyverse)
+library(kableExtra)
+library(DESeq2)
+library(pheatmap)
+library(RColorBrewer)
+library(data.table)
+library(DT)
+library(Biostrings)
+knitr::opts_chunk$set(
+  echo = TRUE,         # Display code chunks
+  eval = FALSE,         # Evaluate code chunks
+  warning = FALSE,     # Hide warnings
+  message = FALSE,     # Hide messages
+  fig.width = 6,       # Set plot width in inches
+  fig.height = 4,      # Set plot height in inches
+  fig.align = "center" # Align plots to the center
+)
+```
+
+
+**Data**\
+Existing RNA-Seq data was retrieved from the following complete RNASeq data available in the [NCBI database](https://www.ncbi.nlm.nih.gov/):\
+- SRR19782039 [Exposure to Valsartan & Carbamazepine](https://www.ncbi.nlm.nih.gov/sra/SRX15826291%5Baccn%5D)\
+- SRR16771870 [Exposure to a synthetic hormone 17 a-Ethinylestradiol (EE2)](https://www.ncbi.nlm.nih.gov/sra/SRX12971792%5Baccn%5D)\
+- SRR7725722 [Diarrhetic Shellfish Poisoning (DSP) toxins associated with Harmful Algal Blooms (HABs)](https://www.ncbi.nlm.nih.gov/sra/SRX4582204%5Baccn%5D)\
+- SRR13013756 [Hypoxia](https://www.ncbi.nlm.nih.gov/sra/SRX9464766%5Baccn%5D)\
+- *Mytilus galloprovincialis* [Reference Genome](https://www.ncbi.nlm.nih.gov/data-hub/genome/GCA_900618805.1/)
+
+```{r}
+getwd()
+```
+
+### Pulling my reference genome from prefab code provided by NCBI
+curled genome and copied just cds file
+
+```{r, engine='bash', eval=TRUE}
+
+ cd /home/shared/8TB_HDD_02/cnmntgna/GitHub/chris-musselcon/data/ncbi_dataset/data/GCA_900618805.1
+ head cds_from_genomic.fna
+ 
+```
+
+
+
+# Create the index file to align my short read files to the genes from the MGAL_10
+```{r, engine='bash'}
+/home/shared/kallisto/kallisto \
+index \
+-i ../data/MGAL_cds.index \
+../data//ncbi_dataset/data/GCA_900618805.1/cds_from_genomic.fna
+```
+
+# Where is data
+
+
+#Runnning Kallisto
+
+```{r, engine='bash', eval=TRUE}
+/home/shared/kallisto/kallisto quant
+```
+
+```{r, engine='bash', eval=TRUE}
+ls /home/shared/8TB_HDD_02/cnmntgna/GitHub/chris-musselcon/output/ncbi/
+```
+
+
+```{r, engine='bash'}
+
+#mkdir ../output
+mkdir ../output/kallisto_01
+
+#OLD CODE
+
+find /home/shared/8TB_HDD_02/cnmntgna/GitHub/chris-musselcon/output/ncbi/*_1.fastq \
+| xargs basename -s _1.fastq  | xargs -I{} /home/shared/kallisto/kallisto \
+quant -i ../data/MGAL_cds.index \
+-o ../output/kallisto_01/{} \
+-t 4 \
+/home/shared/8TB_HDD_02/cnmntgna/GitHub/chris-musselcon/output/ncbi/{}_1.fastq \
+/home/shared/8TB_HDD_02/cnmntgna/GitHub/chris-musselcon/output/ncbi/{}_2.fastq \
+
+
+```
+
+Definitely missing the point of this structure
+```{r, eval=FALSE, engine='bash'}
+#Running for .fastq to pick up the other two, since i missed that not all had a 1 or 2
+#how do i get *.fastq files as well? I thought I understood the syntax, but I am still getting it wrong
+find /home/shared/8TB_HDD_02/cnmntgna/GitHub/chris-musselcon/output/ncbi/.fastq \
+| xargs basename -s .fastq  | xargs -I{} /home/shared/kallisto/kallisto \
+quant -i ../data/MGAL_cds.index \
+-o ../output/kallisto_01/{} \
+-t 4 \
+/home/shared/8TB_HDD_02/cnmntgna/GitHub/chris-musselcon/output/ncbi/{}.fastq
+```
+#DESeq from Kallisto output

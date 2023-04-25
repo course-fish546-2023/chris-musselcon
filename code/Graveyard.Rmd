@@ -256,3 +256,19 @@ cd ../output/ncbi
 
 /home/shared/FastQC/fastqc *fastq -o .
 ```
+
+
+
+NEW ISH
+```{bash}
+# Moving CDS file from other place on Raven, changed to my own directory
+
+chmod 777 ../data/ncbi_dataset/data/GCA_900618805.1/cds_from_genomic.fna
+```
+
+```{bash}
+
+cp /home/shared/8TB_HDD_02/cnmntgna/GitHub/chris-musselcon/output/ncbi/data/ncbi_dataset/data/GCA_900618805.1/cds_from_genomic.fna ..output/ncbi/data/cds_from_genomic.fna 
+
+
+```

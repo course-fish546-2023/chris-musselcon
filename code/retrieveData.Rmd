@@ -32,7 +32,7 @@ ls
 ```
 ```{bash}
 
-# grab the reference - this one may be incorrect - fix the link above if it is
+# grab the reference
 cd ../data
 
 curl -OJX GET "https://api.ncbi.nlm.nih.gov/datasets/v2alpha/genome/accession/GCA_900618805.1/download?include_annotation_type=GENOME_FASTA,GENOME_GFF,RNA_FASTA,CDS_FASTA,PROT_FASTA,SEQUENCE_REPORT&filename=GCA_900618805.1.zip" -H "Accept: application/zip"
@@ -40,9 +40,9 @@ curl -OJX GET "https://api.ncbi.nlm.nih.gov/datasets/v2alpha/genome/accession/GC
 unzip GCA_900618805.1.zip /chris-musselcon/data 
 
 ```
-### Going back to grab my OG reference file becasue the new one doesn't seem to be the right size
+### OLD Genome - not needed
 ```{bash}
-# change link above to go here instead: https://www.ncbi.nlm.nih.gov/data-hub/genome/GCA_025277285.1/
+# remove when I clean this up
 
 
 cd ../data
@@ -50,6 +50,8 @@ cd ../data
 curl -OJX GET "https://api.ncbi.nlm.nih.gov/datasets/v2alpha/genome/accession/GCA_025277285.1/download?include_annotation_type=GENOME_FASTA,GENOME_GFF,RNA_FASTA,CDS_FASTA,PROT_FASTA,SEQUENCE_REPORT&filename=GCA_025277285.1.zip" -H "Accept: application/zip"
 
 ```
+
+# Couldn't move unzip here, moved to terminal and did it
 ```{bash}
 
 #couldn't make this work so I went over to terminal and did it
@@ -58,10 +60,11 @@ cd .
 ls
  unzip GCA_025277285.1.zip
 ````
-### 
-### Kallisto
+
+## Kallisto
+### Inspect what we have first, then run Kallisto
 ```{bash}
-# this code was with the chunk below but giving me issues so I separated to figure out what was up
+# remove this code chunk but keep the one below
 cd /home/shared/kallisto
 
 ```
@@ -75,21 +78,23 @@ head ../data/ncbi_dataset/data/GCA_900618805.1/*.fna
 ```{bash}
 
 /home/shared/kallisto/kallisto index -h
+chmod 777 ../data/ncbi_dataset/data/GCA_900618805.1/cds_from_genomic.fna
 
 ```
 ```{bash}
-chmod 777 ../data/ncbi_dataset/data/GCA_900618805.1/cds_from_genomic.fna
+
+head ../data/ncbi_dataset/data/GCA_900618805.1/cds_from_genomic.fna
 
 ```
 # Create the index file to align my short read files to the genes from the MGAL_10
 ```{bash}
 
-head ../data/ncbi_dataset/data/GCA_900618805.1/cds_from_genomic.fna
+
 
 /home/shared/kallisto/kallisto \
 index -i \
 ../data/MGAL_cds.index \ 
-../data/ncbi_dataset/data/GCA_900618805.1/cds_from_genomic.fna
+../home/shared/8TB_HDD_01/sr320/ncbi/ncbi_dataset/data/GCA_900618805.1/cds_from_genomic.fna
 
 
 ```
