@@ -4,16 +4,9 @@ Existing RNA-Seq data was retrieved from the following complete RNASeq data avai
 - SRR16771870 [Exposure to a synthetic hormone 17 a-Ethinylestradiol (EE2)](https://www.ncbi.nlm.nih.gov/sra/SRX12971792%5Baccn%5D)\
 - SRR7725722 [Diarrhetic Shellfish Poisoning (DSP) toxins associated with Harmful Algal Blooms (HABs)](https://www.ncbi.nlm.nih.gov/sra/SRX4582204%5Baccn%5D)\
 - SRR13013756 [Hypoxia](https://www.ncbi.nlm.nih.gov/sra/SRX9464766%5Baccn%5D)\
-- Reference Genome
+- *Mytilus galloprovincialis* [Reference Genome](https://www.ncbi.nlm.nih.gov/data-hub/genome/GCA_900618805.1/)
 
-```{bash}
-# Experimented with another way to load the data - not intuitive, just keeping for the file accession numbers
-# prefetch SRR19782039 #Valsartan exposed
-# prefetch SRR13013756 #hypoxia
-# prefetch SRR7725722 #DSP toxins
-# prefetch SRR16771870 #17 a-Ethinylestradiol (EE2)
-```
-
+### Downloading the RNASeq data from the accession numbers using SRA Toolkit
 ```{bash}
 # Pull out all of the sequences from the exposures
 
@@ -28,66 +21,44 @@ SRR16771870
 
 ```
 
+### Pulling my reference genome from prefab code provided by NCBI
 ```{bash}
 
-# load my reference genome into my data folder
+# verify where I am working
 
 cd ../data
 ls
 
+```
+```{bash}
+
+# grab the reference - this one may be incorrect - fix the link above if it is
+cd ../data
+
+curl -OJX GET "https://api.ncbi.nlm.nih.gov/datasets/v2alpha/genome/accession/GCA_900618805.1/download?include_annotation_type=GENOME_FASTA,GENOME_GFF,RNA_FASTA,CDS_FASTA,PROT_FASTA,SEQUENCE_REPORT&filename=GCA_900618805.1.zip" -H "Accept: application/zip"
+
+unzip GCA_900618805.1.zip /chris-musselcon/data 
+
+```
+### Going back to grab my OG reference file becasue the new one doesn't seem to be the right size
+```{bash}
+# change link above to go here instead: https://www.ncbi.nlm.nih.gov/data-hub/genome/GCA_025277285.1/
+
+
+cd ../data
+
 curl -OJX GET "https://api.ncbi.nlm.nih.gov/datasets/v2alpha/genome/accession/GCA_025277285.1/download?include_annotation_type=GENOME_FASTA,GENOME_GFF,RNA_FASTA,CDS_FASTA,PROT_FASTA,SEQUENCE_REPORT&filename=GCA_025277285.1.zip" -H "Accept: application/zip"
 
-# the abovve command creates a file that is unzipped, no need for this
-# unzip GCA_025277285.1.zip
-# cannot move this, unsure why and I don't need to I just wanted to keep stuff in the same place
-cd ../ncbi_dataset/data/GCA_025277285.1
-ls
-# moving it to the home data folder out of the one created
-mv GCA_025277285.1_MgalMED_genomic.fna ~/chris-musselcon/data
 ```
 
-```{r}
 
-# QC time
-# Code from the internet, will try fastqc first and then go to biostrings if stuck
-# library(Biostrings)
-#fastq <- readDNAStringSet("~ncbi/SRR7725722_1.fastq")
-#read_lengths <- nchar(fastq)
-#summary(read_lengths)
-#hist(read_lengths)
-#filtered_fastq <- FastqSampler(fastq, sample.keep = "highQuality")
-#writeXStringSet(filtered_fastq, "path/to/filtered_file.fastq")
-# more qc options in this package
-#qualityScoreDistribution
-#GCcontent
-#DkMer
-#trimLRPatterns()
-#trimLowQuality
-#subsetByWidth
-#alignQualityStats
-```
-
-```{bash}
-pwd
-cd ../output
-pwd
-ls
-
-```
-
-```{r}
-if (!require("BiocManager", quietly = TRUE))
-    install.packages("BiocManager")
-
-BiocManager::install("ShortRead")
-
-```
-
+### Kallisto
 ```{bash}
 
-cd ../output/ncbi
-
-/home/shared/FastQC/fastqc *fastq -o .
+cd ../home/shared/kallisto/kallisto \
+index -i \
+../data/cgigas_roslin_rna.index \
+../data/rna.fna
 ```
 
 ```{r}
