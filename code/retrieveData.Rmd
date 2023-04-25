@@ -1,4 +1,10 @@
-
+**Data**\
+Existing RNA-Seq data was retrieved from the following complete RNASeq data available in the [NCBI database](https://www.ncbi.nlm.nih.gov/):\
+- SRR19782039 [Exposure to Valsartan & Carbamazepine](https://www.ncbi.nlm.nih.gov/sra/SRX15826291%5Baccn%5D)\
+- SRR16771870 [Exposure to a synthetic hormone 17 a-Ethinylestradiol (EE2)](https://www.ncbi.nlm.nih.gov/sra/SRX12971792%5Baccn%5D)\
+- SRR7725722 [Diarrhetic Shellfish Poisoning (DSP) toxins associated with Harmful Algal Blooms (HABs)](https://www.ncbi.nlm.nih.gov/sra/SRX4582204%5Baccn%5D)\
+- SRR13013756 [Hypoxia](https://www.ncbi.nlm.nih.gov/sra/SRX9464766%5Baccn%5D)\
+- Reference Genome
 
 ```{bash}
 # Experimented with another way to load the data - not intuitive, just keeping for the file accession numbers
@@ -60,6 +66,7 @@ mv GCA_025277285.1_MgalMED_genomic.fna ~/chris-musselcon/data
 #subsetByWidth
 #alignQualityStats
 ```
+
 ```{bash}
 pwd
 cd ../output
@@ -67,6 +74,7 @@ pwd
 ls
 
 ```
+
 ```{r}
 if (!require("BiocManager", quietly = TRUE))
     install.packages("BiocManager")
@@ -75,14 +83,18 @@ BiocManager::install("ShortRead")
 
 ```
 
-```{r}
-library(ShortRead)
+```{bash}
 
-fastq <- readFastq("/home/shared/8TB_HDD_02/cnmntgna/output/ncbi/SRR7725722_1.fastq")
+cd ../output/ncbi
+
+/home/shared/FastQC/fastqc *fastq -o .
 ```
 
+```{r}
 
+kallisto first
+can trim with cds/ gff and use hisat if i want to 
+# library(ShortRead)
 
-
-
-
+# fastq <- readFastq("~/output/ncbi/SRR7725722_1.fastq")
+```
