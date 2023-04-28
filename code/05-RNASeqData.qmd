@@ -99,13 +99,22 @@ quant -i ../data/MGAL_cds.index \
 
 ```
 
+Getting length mean & SD
+```{bash}
+
+awk 'BEGIN { t=0.0;sq=0.0; n=0;} ;NR%4==2 {n++;L=length($0);t+=L;sq+=L*L;}END{m=t/n;printf("total %d avg=%f stddev=%f\n",n,m,sq/n-m*m);}' /home/shared/8TB_HDD_02/cnmntgna/GitHub/chris-musselcon/output/ncbi/*.fastq
+
+```
+
+
 Definitely missing the point of this structure
 ```{r, eval=FALSE, engine='bash'}
 #Running for .fastq to pick up the other two, since i missed that not all had a 1 or 2
 #how do i get *.fastq files as well? I thought I understood the syntax, but I am still getting it wrong
-find /home/shared/8TB_HDD_02/cnmntgna/GitHub/chris-musselcon/output/ncbi/.fastq \
+find /home/shared/8TB_HDD_02/cnmntgna/GitHub/chris-musselcon/output/ncbi/*.fastq \
 | xargs basename -s .fastq  | xargs -I{} /home/shared/kallisto/kallisto \
 quant -i ../data/MGAL_cds.index \
+--single -l 92 -s 405 \
 -o ../output/kallisto_01/{} \
 -t 4 \
 /home/shared/8TB_HDD_02/cnmntgna/GitHub/chris-musselcon/output/ncbi/{}.fastq
@@ -128,7 +137,11 @@ perl /home/shared/trinityrnaseq-v2.12.0/util/abundance_estimates_to_matrix.pl \
     --gene_trans_map none \
     --out_prefix /home/shared/8TB_HDD_02/cnmntgna/GitHub/chris-musselcon/output/kallisto_01 \
     --name_sample_by_basedir \
-    /home/shared/8TB_HDD_02/cnmntgna/GitHub/chris-musselcon/output/kallisto_01/SRR16771870/abundance.tsv \
+    /home/shared/8TB_HDD_02/cnmntgna/GitHub/chris-musselcon/output/kallisto_01/SRR7725722/abundance.tsv \
+    /home/shared/8TB_HDD_02/cnmntgna/GitHub/chris-musselcon/output/kallisto_01/SRR7725722_1/abundance.tsv \
+    /home/shared/8TB_HDD_02/cnmntgna/GitHub/chris-musselcon/output/kallisto_01/SRR7725722_2/abundance.tsv \
+    /home/shared/8TB_HDD_02/cnmntgna/GitHub/chris-musselcon/output/kallisto_01/SRR7725722/abundance.tsv \
+    /home/shared/8TB_HDD_02/cnmntgna/GitHub/chris-musselcon/output/kallisto_01/SRR19782039/abundance.tsv \
     /home/shared/8TB_HDD_02/cnmntgna/GitHub/chris-musselcon/output/kallisto_01/SRR7725722/abundance.tsv \
 
 ```
@@ -139,8 +152,8 @@ countmatrix <- read.delim("../output/kallisto_01.isoform.counts.matrix", header 
 rownames(countmatrix) <- countmatrix$X
 countmatrix <- countmatrix[,-1]
 head(countmatrix)
-tail(countmatrix)
-dim(countmatrix)
+#tail(countmatrix)
+#dim(countmatrix)
 
 ```
 
