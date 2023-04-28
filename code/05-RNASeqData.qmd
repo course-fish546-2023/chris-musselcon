@@ -99,15 +99,14 @@ quant -i ../data/MGAL_cds.index \
 
 ```
 
-Getting length mean & SD
+Getting length mean & SD for the single read sequences in the .fastq files. Code taken from: https://www.biostars.org/p/243552/
 ```{bash}
 
 awk 'BEGIN { t=0.0;sq=0.0; n=0;} ;NR%4==2 {n++;L=length($0);t+=L;sq+=L*L;}END{m=t/n;printf("total %d avg=%f stddev=%f\n",n,m,sq/n-m*m);}' /home/shared/8TB_HDD_02/cnmntgna/GitHub/chris-musselcon/output/ncbi/*.fastq
 
 ```
 
-
-Definitely missing the point of this structure
+Grabbing only the fastq files
 ```{r, eval=FALSE, engine='bash'}
 #Running for .fastq to pick up the other two, since i missed that not all had a 1 or 2
 #how do i get *.fastq files as well? I thought I understood the syntax, but I am still getting it wrong
@@ -140,9 +139,11 @@ perl /home/shared/trinityrnaseq-v2.12.0/util/abundance_estimates_to_matrix.pl \
     /home/shared/8TB_HDD_02/cnmntgna/GitHub/chris-musselcon/output/kallisto_01/SRR7725722/abundance.tsv \
     /home/shared/8TB_HDD_02/cnmntgna/GitHub/chris-musselcon/output/kallisto_01/SRR7725722_1/abundance.tsv \
     /home/shared/8TB_HDD_02/cnmntgna/GitHub/chris-musselcon/output/kallisto_01/SRR7725722_2/abundance.tsv \
-    /home/shared/8TB_HDD_02/cnmntgna/GitHub/chris-musselcon/output/kallisto_01/SRR7725722/abundance.tsv \
-    /home/shared/8TB_HDD_02/cnmntgna/GitHub/chris-musselcon/output/kallisto_01/SRR19782039/abundance.tsv \
-    /home/shared/8TB_HDD_02/cnmntgna/GitHub/chris-musselcon/output/kallisto_01/SRR7725722/abundance.tsv \
+    /home/shared/8TB_HDD_02/cnmntgna/GitHub/chris-musselcon/output/kallisto_01/SRR13013756/abundance.tsv \
+    /home/shared/8TB_HDD_02/cnmntgna/GitHub/chris-musselcon/output/kallisto_01/SRR16771870/abundance.tsv \
+    /home/shared/8TB_HDD_02/cnmntgna/GitHub/chris-musselcon/output/kallisto_01/SRR16771870_1/abundance.tsv \
+    /home/shared/8TB_HDD_02/cnmntgna/GitHub/chris-musselcon/output/kallisto_01/SRR16771870_2/abundance.tsv \
+    /home/shared/8TB_HDD_02/cnmntgna/GitHub/chris-musselcon/output/kallisto_01/SRR19782039/abundance.tsv
 
 ```
 
@@ -167,7 +168,7 @@ str(countmatrix)
 
 dim(countmatrix)
 
-dim(deseq2.colData)
+#dim(deseq2.colData)
 
 ```
 
@@ -178,20 +179,76 @@ length(colnames(data))
 ```
 
 ```{r}
-deseq2.colData <- data.frame(condition=factor(c("EE2", "DSP"))), 
-                             type=factor(rep("single-read", 24)))
+deseq2.colData <- data.frame(condition=factor(c("DSP", "DSP", "Hypoxia", "EE2", "EE2", "EE2", "Valsartan")), 
+                             type=factor(rep("single-read", 7)))
 rownames(deseq2.colData) <- colnames(data)
+dim(deseq2.colData)
 deseq2.dds <- DESeqDataSetFromMatrix(countData = countmatrix,
                                      colData = deseq2.colData, 
                                      design = ~ condition)
+```
+```{r}
 
+deseq2.dds <- DESeq(deseq2.dds)
+deseq2.res <- results(deseq2.dds)
+deseq2.res <- deseq2.res[order(rownames(deseq2.res)), ]
 
+```
 
+```{r}
 
+vsd <- vst(deseq2.dds, blind = FALSE)
+plotPCA(vsd, intgroup = "condition")
 
+```
 
+```{r}
 
+# Select top 50 differentially expressed genes
+res <- results(deseq2.dds)
+res_ordered <- res[order(res$padj), ]
+top_genes <- row.names(res_ordered)[1:50]
 
+# Extract counts and normalize
+counts <- counts(deseq2.dds, normalized = TRUE)
+counts_top <- counts[top_genes, ]
+
+# Log-transform counts
+log_counts_top <- log2(counts_top + 1)
+
+# Generate heatmap
+pheatmap(log_counts_top, scale = "row")
+
+```
+
+```{r}
+#what are we doing here and how do i get it to compare the others against each other?
+head(deseq2.res)
+
+```
+
+```{r}
+
+# Count number of hits with adjusted p-value less then 0.05
+dim(deseq2.res[!is.na(deseq2.res$padj) & deseq2.res$padj <= 0.05, ])
+
+```
+
+```{r}
+
+tmp <- deseq2.res
+# The main plot
+plot(tmp$baseMean, tmp$log2FoldChange, pch=20, cex=0.45, ylim=c(-3, 3), log="x", col="darkgray",
+     main="DEG Valsartan vs DSP (pval <= 0.05)",
+     xlab="mean of normalized counts",
+     ylab="Log2 Fold Change")
+# Getting the significant points and plotting them again so they're a different color
+tmp.sig <- deseq2.res[!is.na(deseq2.res$padj) & deseq2.res$padj <= 0.05, ]
+points(tmp.sig$baseMean, tmp.sig$log2FoldChange, pch=20, cex=0.45, col="red")
+# 2 FC lines
+abline(h=c(-1,1), col="blue")
+
+```
 
 
 
