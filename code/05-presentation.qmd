@@ -14,32 +14,33 @@ editor: visual
 
 ## Project Overview {.smaller}
 
-Utilizing differential gene expression to support conclusions about what common or unique physiological responses are displayed by *M. galloprovincialis* when exposed to the anthropogenic stressors listed below.  
+Utilizing differential gene expression to support conclusions about what common or unique physiological responses are displayed by *M. galloprovincialis* when exposed to the anthropogenic stressors listed below.
 
-
-
-| Accession ID | Tissue Type | Exposure                        |
+| Accession ID | Tissue Type |            Exposure             |
 |:------------:|:-----------:|:-------------------------------:|
-| SRR19782039  | Gill        | Valsartan & Carbamazepine       |
-| SRR16771870  | Gill        | Synthetic 17 a-Ethinylestradiol |
-| SRR7725722   | Gill        | Diarrhetic Shellfish Poisoning  |
-| SRR13013756  | Gill        | Hypoxia                         |
-
+| SRR19782039  |    Gill     |    Valsartan & Carbamazepine    |
+| SRR16771870  |    Gill     | Synthetic 17 a-Ethinylestradiol |
+|  SRR7725722  |    Gill     | Diarrhetic Shellfish Poisoning  |
+| SRR13013756  |    Gill     |             Hypoxia             |
 
 ## Methods
-## {auto-animate=true}
+
+##  {auto-animate="true"}
+
 **Methods**
 
 Choose organism & question
 
-## {auto-animate=true}
+##  {auto-animate="true"}
+
 **Methods**
 
 Search NCBI for existing RNASeq files
 
 Choose organism & question
 
-## {auto-animate=true}
+##  {auto-animate="true"}
+
 **Methods**
 
 Align sequences using Kallisto
@@ -48,7 +49,8 @@ Search NCBI for existing RNASeq files
 
 Choose organism & question
 
-## {auto-animate=true}
+##  {auto-animate="true"}
+
 **Methods**
 
 Quantify DEG & Annotate
@@ -59,12 +61,13 @@ Search NCBI for existing RNASeq files
 
 Choose organism & question
 
-## {auto-animate=true}
+##  {auto-animate="true"}
+
 **Methods**
 
 Visualize Data
 
-Quantify DEG & Annotate 
+Quantify DEG & Annotate
 
 Align sequences using Kallisto
 
@@ -72,7 +75,8 @@ Search NCBI for existing RNASeq files
 
 Choose organism & question
 
-## {auto-animate=true}
+##  {auto-animate="true"}
+
 **Methods**
 
 Perform Gene Enrichment Analysis
@@ -90,10 +94,8 @@ Choose organism & question
 ## Preliminary Results {.smaller}
 
 # Taking a look at my Kallisto output {.smaller}
-countmatrix <- read.delim("../output/kallisto_01.isoform.counts.matrix", header = TRUE, sep = '\t')
-rownames(countmatrix) <- countmatrix$X
-countmatrix <- countmatrix[,-1]
-head(countmatrix)
+
+countmatrix \<- read.delim("../output/kallisto_01.isoform.counts.matrix", header = TRUE, sep = '\t') rownames(countmatrix) \<- countmatrix\$X countmatrix \<- countmatrix\[,-1\] head(countmatrix)
 
 ```{r}
 
@@ -108,11 +110,8 @@ head(countmatrix)
 ```
 
 # Only 2 columns? {.smaller}
-countmatrix <- read.delim("../output/kallisto_01.isoform.counts.matrix", header = TRUE, sep = '\t')
-rownames(countmatrix) <- countmatrix$X
-countmatrix <- countmatrix[,-1]
-head(countmatrix)
-dim(countmatrix)
+
+countmatrix \<- read.delim("../output/kallisto_01.isoform.counts.matrix", header = TRUE, sep = '\t') rownames(countmatrix) \<- countmatrix\$X countmatrix \<- countmatrix\[,-1\] head(countmatrix) dim(countmatrix)
 
 ```{r}
 # Only 2 columns of values?
@@ -124,7 +123,8 @@ dim(countmatrix)
 ```
 
 ## Troubleshooting Missing Sequences {.smaller}
-```{.python code-line-numbers="1, 8"}
+
+``` {.python code-line-numbers="1,8"}
 This code finds files ending in 1.fstq
 
 find /home/shared/8TB_HDD_02/cnmntgna/GitHub/chris-musselcon/output/ncbi/*_1.fastq \
@@ -136,8 +136,7 @@ quant -i ../data/MGAL_cds.index \
 /home/shared/8TB_HDD_02/cnmntgna/GitHub/chris-musselcon/output/ncbi/{}_2.fastq \
 ```
 
-
-```{.python code-line-numbers="1, 9"}
+``` {.python code-line-numbers="1,9"}
 This code finds files ending in 2.fstq
 
 find /home/shared/8TB_HDD_02/cnmntgna/GitHub/chris-musselcon/output/ncbi/*_1.fastq \
@@ -150,10 +149,10 @@ quant -i ../data/MGAL_cds.index \
 ```
 
 ## Next Steps
-![mussels](https://github.com/course-fish546-2023/chris-musselcon/blob/main/assets/mytilusReef.png?raw=true)  
-- Run 2 missing sequences through Kallisto  
-- Run DESeq  
-- Quantify DEG & Annotate  
-- Visualize Data  
-- Perform Gene Enrichment Analysis  
 
+![mussels](https://github.com/course-fish546-2023/chris-musselcon/blob/main/assets/mytilusReef.png?raw=true)\
+- Run 2 missing sequences through Kallisto\
+- Run DESeq\
+- Quantify DEG & Annotate\
+- Visualize Data\
+- Perform Gene Enrichment Analysis
