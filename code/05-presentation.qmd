@@ -7,30 +7,40 @@ format:
   revealjs: 
     theme: serif
     navigation-mode: linear
+    slide-number: true
+    show-slide-number: print
 editor: visual
 ---
 
-## Project Overview
+## Project Overview {.smaller}
 
-To use differential gene expression to support conclusions about what common or unique physiological responses are displayed by M. galloprovincialis when exposed to the anthropogenic stressors listed below.
+Utilizing differential gene expression to support conclusions about what common or unique physiological responses are displayed by *M. galloprovincialis* when exposed to the anthropogenic stressors listed below.  
 
--   [Valsartan & Carbamazepine](https://www.ncbi.nlm.nih.gov/sra/SRX15826291[accn])
--   [Synthetic 17 a-Ethinylestradiol](https://www.ncbi.nlm.nih.gov/sra/SRX12971792[accn])
--   [Diarrhetic Shellfish Poisoning (DSP) toxins associated with Harmful Algal Blooms (HABs)](https://www.ncbi.nlm.nih.gov/sra/SRX4582204[accn])
--   [Hypoxia](https://www.ncbi.nlm.nih.gov/sra/SRX9464766[accn])  
+
+
+| Accession ID | Tissue Type | Exposure                        |
+|:------------:|:-----------:|:-------------------------------:|
+| SRR19782039  | Gill        | Valsartan & Carbamazepine       |
+| SRR16771870  | Gill        | Synthetic 17 a-Ethinylestradiol |
+| SRR7725722   | Gill        | Diarrhetic Shellfish Poisoning  |
+| SRR13013756  | Gill        | Hypoxia                         |
+
 
 ## Methods
 ## {auto-animate=true}
+**Methods**
 
 Choose organism & question
 
 ## {auto-animate=true}
+**Methods**
 
 Search NCBI for existing RNASeq files
 
 Choose organism & question
 
 ## {auto-animate=true}
+**Methods**
 
 Align sequences using Kallisto
 
@@ -39,6 +49,7 @@ Search NCBI for existing RNASeq files
 Choose organism & question
 
 ## {auto-animate=true}
+**Methods**
 
 Quantify DEG & Annotate
 
@@ -49,6 +60,7 @@ Search NCBI for existing RNASeq files
 Choose organism & question
 
 ## {auto-animate=true}
+**Methods**
 
 Visualize Data
 
@@ -61,6 +73,7 @@ Search NCBI for existing RNASeq files
 Choose organism & question
 
 ## {auto-animate=true}
+**Methods**
 
 Perform Gene Enrichment Analysis
 
@@ -74,9 +87,13 @@ Search NCBI for existing RNASeq files
 
 Choose organism & question
 
-## Preliminary Results
+## Preliminary Results {.smaller}
 
-## {auto-animate="true"}
+# Taking a look at my Kallisto output {.smaller}
+countmatrix <- read.delim("../output/kallisto_01.isoform.counts.matrix", header = TRUE, sep = '\t')
+rownames(countmatrix) <- countmatrix$X
+countmatrix <- countmatrix[,-1]
+head(countmatrix)
 
 ```{r}
 
@@ -85,26 +102,53 @@ countmatrix <- read.delim("../output/kallisto_01.isoform.counts.matrix", header 
 rownames(countmatrix) <- countmatrix$X
 countmatrix <- countmatrix[,-1]
 head(countmatrix)
-
-![image](kallistoTable.png)
+#![kallisto](kallistoTable.png)
+#trying to add the image but it isn't rendering
 
 ```
 
-## {auto-animate=true}
+# Only 2 columns? {.smaller}
+countmatrix <- read.delim("../output/kallisto_01.isoform.counts.matrix", header = TRUE, sep = '\t')
+rownames(countmatrix) <- countmatrix$X
+countmatrix <- countmatrix[,-1]
+head(countmatrix)
+dim(countmatrix)
 
 ```{r}
-# Why do i only see
-output$phonePlot <- renderPlot({
-  # Render a barplot
-  barplot(WorldPhones[,input$region]*1000, 
-          main=input$region,
-          ylab="Number of Telephones",
-          xlab="Year")
-})
+# Only 2 columns of values?
+countmatrix <- read.delim("../output/kallisto_01.isoform.counts.matrix", header = TRUE, sep = '\t')
+rownames(countmatrix) <- countmatrix$X
+countmatrix <- countmatrix[,-1]
+head(countmatrix)
+dim(countmatrix)
 ```
 
-```{r}
+## Troubleshooting Missing Sequences {.smaller}
+```{.python code-line-numbers="1, 8"}
+This code finds files ending in 1.fstq
 
+find /home/shared/8TB_HDD_02/cnmntgna/GitHub/chris-musselcon/output/ncbi/*_1.fastq \
+| xargs basename -s _1.fastq  | xargs -I{} /home/shared/kallisto/kallisto \
+quant -i ../data/MGAL_cds.index \
+-o ../output/kallisto_01/{} \
+-t 4 \
+/home/shared/8TB_HDD_02/cnmntgna/GitHub/chris-musselcon/output/ncbi/{}_1.fastq \
+/home/shared/8TB_HDD_02/cnmntgna/GitHub/chris-musselcon/output/ncbi/{}_2.fastq \
+```
+
+
+```{.python code-line-numbers="1, 9"}
+This code finds files ending in 2.fstq
+
+find /home/shared/8TB_HDD_02/cnmntgna/GitHub/chris-musselcon/output/ncbi/*_1.fastq \
+| xargs basename -s _1.fastq  | xargs -I{} /home/shared/kallisto/kallisto \
+quant -i ../data/MGAL_cds.index \
+-o ../output/kallisto_01/{} \
+-t 4 \
+/home/shared/8TB_HDD_02/cnmntgna/GitHub/chris-musselcon/output/ncbi/{}_1.fastq \
+/home/shared/8TB_HDD_02/cnmntgna/GitHub/chris-musselcon/output/ncbi/{}_2.fastq \
 ```
 
 ## Next Steps
+![mussels](mytilusReef.png)
+#trying to add the image but it isn't rendering
