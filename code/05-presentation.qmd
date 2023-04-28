@@ -150,5 +150,10 @@ quant -i ../data/MGAL_cds.index \
 ```
 
 ## Next Steps
-![mussels](mytilusReef.png)
-#trying to add the image but it isn't rendering
+![mussels](https://github.com/course-fish546-2023/chris-musselcon/blob/main/assets/mytilusReef.png?raw=true)  
+- Run 2 missing sequences through Kallisto  
+- Run DESeq  
+- Quantify DEG & Annotate  
+- Visualize Data  
+- Perform Gene Enrichment Analysis  
+

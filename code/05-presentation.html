@@ -524,7 +524,7 @@ lcl|UYJE01006499.1_cds_VDI46496.1_47798     48.6272    62.0000</code></pre>
 </section>
 <section id="troubleshooting-missing-sequences" class="slide level2 smaller">
 <h2>Troubleshooting Missing Sequences</h2>
-<div class="sourceCode" id="cb4" data-code-line-numbers="8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1"></a>This code finds files ending <span class="kw">in</span> <span class="fl">1.</span><span class="er">fstq</span></span>
+<div class="sourceCode" id="cb4" data-code-line-numbers="1, 8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1"></a>This code finds files ending <span class="kw">in</span> <span class="fl">1.</span><span class="er">fstq</span></span>
 <span id="cb4-2"><a href="#cb4-2"></a></span>
 <span id="cb4-3"><a href="#cb4-3"></a>find <span class="op">/</span>home<span class="op">/</span>shared<span class="op">/</span><span class="dv">8</span><span class="er">TB_HDD_02</span><span class="op">/</span>cnmntgna<span class="op">/</span>GitHub<span class="op">/</span>chris<span class="op">-</span>musselcon<span class="op">/</span>output<span class="op">/</span>ncbi<span class="op">/*</span>_1.fastq <span class="op">\</span></span>
 <span id="cb4-4"><a href="#cb4-4"></a><span class="op">|</span> xargs basename <span class="op">-</span>s _1.fastq  <span class="op">|</span> xargs <span class="op">-</span>I{} <span class="op">/</span>home<span class="op">/</span>shared<span class="op">/</span>kallisto<span class="op">/</span>kallisto <span class="op">\</span></span>
@@ -533,7 +533,7 @@ lcl|UYJE01006499.1_cds_VDI46496.1_47798     48.6272    62.0000</code></pre>
 <span id="cb4-7"><a href="#cb4-7"></a><span class="op">-</span>t <span class="dv">4</span> <span class="op">\</span></span>
 <span id="cb4-8"><a href="#cb4-8"></a><span class="op">/</span>home<span class="op">/</span>shared<span class="op">/</span><span class="dv">8</span><span class="er">TB_HDD_02</span><span class="op">/</span>cnmntgna<span class="op">/</span>GitHub<span class="op">/</span>chris<span class="op">-</span>musselcon<span class="op">/</span>output<span class="op">/</span>ncbi<span class="op">/</span>{}_1.fastq <span class="op">\</span></span>
 <span id="cb4-9"><a href="#cb4-9"></a><span class="op">/</span>home<span class="op">/</span>shared<span class="op">/</span><span class="dv">8</span><span class="er">TB_HDD_02</span><span class="op">/</span>cnmntgna<span class="op">/</span>GitHub<span class="op">/</span>chris<span class="op">-</span>musselcon<span class="op">/</span>output<span class="op">/</span>ncbi<span class="op">/</span>{}_2.fastq <span class="op">\</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="sourceCode" id="cb5" data-code-line-numbers="9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1"></a>This code finds files ending <span class="kw">in</span> <span class="fl">2.</span><span class="er">fstq</span></span>
+<div class="sourceCode" id="cb5" data-code-line-numbers="1, 9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1"></a>This code finds files ending <span class="kw">in</span> <span class="fl">2.</span><span class="er">fstq</span></span>
 <span id="cb5-2"><a href="#cb5-2"></a></span>
 <span id="cb5-3"><a href="#cb5-3"></a>find <span class="op">/</span>home<span class="op">/</span>shared<span class="op">/</span><span class="dv">8</span><span class="er">TB_HDD_02</span><span class="op">/</span>cnmntgna<span class="op">/</span>GitHub<span class="op">/</span>chris<span class="op">-</span>musselcon<span class="op">/</span>output<span class="op">/</span>ncbi<span class="op">/*</span>_1.fastq <span class="op">\</span></span>
 <span id="cb5-4"><a href="#cb5-4"></a><span class="op">|</span> xargs basename <span class="op">-</span>s _1.fastq  <span class="op">|</span> xargs <span class="op">-</span>I{} <span class="op">/</span>home<span class="op">/</span>shared<span class="op">/</span>kallisto<span class="op">/</span>kallisto <span class="op">\</span></span>
@@ -542,11 +542,15 @@ lcl|UYJE01006499.1_cds_VDI46496.1_47798     48.6272    62.0000</code></pre>
 <span id="cb5-7"><a href="#cb5-7"></a><span class="op">-</span>t <span class="dv">4</span> <span class="op">\</span></span>
 <span id="cb5-8"><a href="#cb5-8"></a><span class="op">/</span>home<span class="op">/</span>shared<span class="op">/</span><span class="dv">8</span><span class="er">TB_HDD_02</span><span class="op">/</span>cnmntgna<span class="op">/</span>GitHub<span class="op">/</span>chris<span class="op">-</span>musselcon<span class="op">/</span>output<span class="op">/</span>ncbi<span class="op">/</span>{}_1.fastq <span class="op">\</span></span>
 <span id="cb5-9"><a href="#cb5-9"></a><span class="op">/</span>home<span class="op">/</span>shared<span class="op">/</span><span class="dv">8</span><span class="er">TB_HDD_02</span><span class="op">/</span>cnmntgna<span class="op">/</span>GitHub<span class="op">/</span>chris<span class="op">-</span>musselcon<span class="op">/</span>output<span class="op">/</span>ncbi<span class="op">/</span>{}_2.fastq <span class="op">\</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>```</p>
 </section>
 <section id="next-steps" class="slide level2">
 <h2>Next Steps</h2>
-<p>#<img data-src="kallistoTable.png" alt="kallisto"> #trying to add the image but it isn’t rendering</p>
+<p><img data-src="https://github.com/course-fish546-2023/chris-musselcon/blob/main/assets/mytilusReef.png?raw=true" alt="mussels"><br>
+- Run 2 missing sequences through Kallisto<br>
+- Run DESeq<br>
+- Quantify DEG &amp; Annotate<br>
+- Visualize Data<br>
+- Perform Gene Enrichment Analysis</p>
 <div class="footer footer-default">
 
 </div>
