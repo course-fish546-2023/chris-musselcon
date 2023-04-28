@@ -1,0 +1,110 @@
+---
+title: "Week 5 Progress"
+subtitle: "Quantifying DGE in *M. galloprovincialis* utilizing existing RNASeq data"
+author: " C. Mantegna"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+format: 
+  revealjs: 
+    theme: serif
+    navigation-mode: linear
+editor: visual
+---
+
+## Project Overview
+
+To use differential gene expression to support conclusions about what common or unique physiological responses are displayed by M. galloprovincialis when exposed to the anthropogenic stressors listed below.
+
+-   [Valsartan & Carbamazepine](https://www.ncbi.nlm.nih.gov/sra/SRX15826291[accn])
+-   [Synthetic 17 a-Ethinylestradiol](https://www.ncbi.nlm.nih.gov/sra/SRX12971792[accn])
+-   [Diarrhetic Shellfish Poisoning (DSP) toxins associated with Harmful Algal Blooms (HABs)](https://www.ncbi.nlm.nih.gov/sra/SRX4582204[accn])
+-   [Hypoxia](https://www.ncbi.nlm.nih.gov/sra/SRX9464766[accn])  
+
+## Methods
+## {auto-animate=true}
+
+Choose organism & question
+
+## {auto-animate=true}
+
+Search NCBI for existing RNASeq files
+
+Choose organism & question
+
+## {auto-animate=true}
+
+Align sequences using Kallisto
+
+Search NCBI for existing RNASeq files
+
+Choose organism & question
+
+## {auto-animate=true}
+
+Quantify DEG & Annotate
+
+Align sequences using Kallisto
+
+Search NCBI for existing RNASeq files
+
+Choose organism & question
+
+## {auto-animate=true}
+
+Visualize Data
+
+Quantify DEG & Annotate 
+
+Align sequences using Kallisto
+
+Search NCBI for existing RNASeq files
+
+Choose organism & question
+
+## {auto-animate=true}
+
+Perform Gene Enrichment Analysis
+
+Visualize Data
+
+Quantify DEG & Annotate
+
+Align sequences using Kallisto
+
+Search NCBI for existing RNASeq files
+
+Choose organism & question
+
+## Preliminary Results
+
+## {auto-animate="true"}
+
+```{r}
+
+# Taking a look at my Kallisto output
+countmatrix <- read.delim("../output/kallisto_01.isoform.counts.matrix", header = TRUE, sep = '\t')
+rownames(countmatrix) <- countmatrix$X
+countmatrix <- countmatrix[,-1]
+head(countmatrix)
+
+![image](kallistoTable.png)
+
+```
+
+## {auto-animate=true}
+
+```{r}
+# Why do i only see
+output$phonePlot <- renderPlot({
+  # Render a barplot
+  barplot(WorldPhones[,input$region]*1000, 
+          main=input$region,
+          ylab="Number of Telephones",
+          xlab="Year")
+})
+```
+
+```{r}
+
+```
+
+## Next Steps
