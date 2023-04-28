@@ -64,7 +64,7 @@ curled genome and copied just cds file
 /home/shared/kallisto/kallisto \
 index \
 -i ../data/MGAL_cds.index \
-../data//ncbi_dataset/data/GCA_900618805.1/cds_from_genomic.fna
+../data/ncbi_dataset/data/GCA_900618805.1/cds_from_genomic.fna
 ```
 
 # Where is data
@@ -293,13 +293,61 @@ deglist2 <- deglist[, c("RowName", "pvalue")] # Optionally, reorder the columns
 datatable(deglist)
 
 ```
+#Need to modify for my files, just copying code in first
+#Annotation 
+```{r}
+
+cg_sp <- read.csv("https://raw.githubusercontent.com/sr320/nb-2022/main/C_gigas/analyses/CgR-blastp-sp.tab", header = FALSE, sep="\t")  %>%
+  distinct(V1, .keep_all = TRUE)
+```
+
+```{r}
+loc <- read.csv("https://raw.githubusercontent.com/sr320/nb-2022/main/C_gigas/analyses/LOC_Acc.tab", sep = " ", header = FALSE)
+```
+
+```{r}
+comb <- left_join(loc, cg_sp, by = c("V2" = "V1")) %>%
+  left_join(deglist, by = c("V1" = "RowName"))
+```
+
+#Same as annotation process
+#Gene enrichment analysis
+```{r}
+gene_deg_status <- res_df %>%
+  mutate(degstaus = ifelse(padj < 0.05, 1, 0)) 
+```
+
+```{r}
+# Read the FASTA file
+fasta_data <- readDNAStringSet("/home/shared/8TB_HDD_02/cnmntgna/GitHub/chris-musselcon/data/ncbi_dataset/data/GCA_900618805.1/cds_from_genomic.fna")
+
+# Calculate gene lengths
+gene_lengths <- width(fasta_data)
 
 
+# Extract gene names/IDs from sequence IDs
+gene_names <- sapply(names(fasta_data), function(x) strsplit(x, " ")[[1]][1])
 
+# Create a data frame with gene IDs and lengths
+gene_lengths_df <- data.frame(geneID = gene_names, length = gene_lengths)
+```
 
+#Same as annotation process
+#Need GO mappings
+#only run to install packages
+```{r}
+# have to install the package that allows me to call nullp
+install.packages("remotes")
+remotes::install_github("nadiadavidson/goseq")
+library("goseq")
 
+```
 
+```{r}
+pwf <- nullp(gene_data, bias.data = gene_lengths)
 
+GO_analysis <- goseq(pwf, gene2cat = "your_organism_GO_mapping")
+```
 
 
 
