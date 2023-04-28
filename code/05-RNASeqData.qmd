@@ -250,6 +250,50 @@ abline(h=c(-1,1), col="blue")
 
 ```
 
+```{r}
+
+# Prepare the data for plotting
+res_df <- as.data.frame(deseq2.res)
+res_df$gene <- row.names(res_df)
+
+# Create volcano plot
+volcano_plot <- ggplot(res_df, aes(x = log2FoldChange, y = -log10(padj), color = padj < 0.05)) +
+  geom_point(alpha = 0.6, size = 1.5) +
+  scale_color_manual(values = c("grey", "red")) +
+  labs(title = "Volcano Plot",
+       x = "Log2 Fold Change",
+       y = "-Log10 Adjusted P-value",
+       color = "Significantly\nDifferentially Expressed") +
+  theme_minimal() +
+  theme(panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        legend.position = "top")
+
+print(volcano_plot)
+
+```
+
+```{r}
+
+write.table(tmp.sig, "../output/DEGlist.tab", sep = '\t', row.names = T)
+
+```
+
+
+```{r}
+
+deglist <- read.csv("../output/DEGlist.tab", sep = '\t', header = TRUE)
+deglist$RowName <- rownames(deglist)
+deglist2 <- deglist[, c("RowName", "pvalue")] # Optionally, reorder the columns
+
+```
+
+```{r}
+
+datatable(deglist)
+
+```
+
 
 
 
