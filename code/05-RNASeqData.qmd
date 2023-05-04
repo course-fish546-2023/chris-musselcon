@@ -128,7 +128,7 @@ getwd()
 cd /home/shared/trinityrnaseq-v2.12.0
 ```
 
-#not able to run this without the full path - pretty sure i am missing something there, but this is the solution now.
+#Kallisto
 ```{r, engine='bash'}
 
 perl /home/shared/trinityrnaseq-v2.12.0/util/abundance_estimates_to_matrix.pl \
@@ -204,7 +204,7 @@ plotPCA(vsd, intgroup = "condition")
 
 ```{r}
 
-# Select top 50 differentially expressed genes
+# Select top 50 differentially expressed genes - is it valuable to select more than 50?
 res <- results(deseq2.dds)
 res_ordered <- res[order(res$padj), ]
 top_genes <- row.names(res_ordered)[1:50]
@@ -293,8 +293,35 @@ deglist2 <- deglist[, c("RowName", "pvalue")] # Optionally, reorder the columns
 datatable(deglist)
 
 ```
-#Need to modify for my files, just copying code in first
+
 #Annotation 
+## BLAST to uniprot, use HISAT?
+### Enrichr install/ call
+```{r}
+install.packages("devtools")
+library(devtools)
+install_github("wjawaid/enrichR")
+library("enrichR")
+listEnrichrSites()
+dbs <- listEnrichrDbs()
+
+```
+
+```{r}
+
+
+
+```
+
+
+
+
+
+
+
+
+# Steven's code
+#Need to modify for my files, just copying code in first
 ```{r}
 
 cg_sp <- read.csv("https://raw.githubusercontent.com/sr320/nb-2022/main/C_gigas/analyses/CgR-blastp-sp.tab", header = FALSE, sep="\t")  %>%
