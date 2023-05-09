@@ -11,6 +11,9 @@ output:
     number_sections: true
     code_folding: show
     code_download: true
+editor: 
+  markdown: 
+    wrap: 72
 ---
 
 ```{r setup, include=FALSE}
@@ -34,20 +37,27 @@ knitr::opts_chunk$set(
 )
 ```
 
-
 **Data**\
-Existing RNA-Seq data was retrieved from the following complete RNASeq data available in the [NCBI database](https://www.ncbi.nlm.nih.gov/):\
-- SRR19782039 [Exposure to Valsartan & Carbamazepine](https://www.ncbi.nlm.nih.gov/sra/SRX15826291%5Baccn%5D)\
-- SRR16771870 [Exposure to a synthetic hormone 17 a-Ethinylestradiol (EE2)](https://www.ncbi.nlm.nih.gov/sra/SRX12971792%5Baccn%5D)\
-- SRR7725722 [Diarrhetic Shellfish Poisoning (DSP) toxins associated with Harmful Algal Blooms (HABs)](https://www.ncbi.nlm.nih.gov/sra/SRX4582204%5Baccn%5D)\
-- SRR13013756 [Hypoxia](https://www.ncbi.nlm.nih.gov/sra/SRX9464766%5Baccn%5D)\
-- *Mytilus galloprovincialis* [Reference Genome](https://www.ncbi.nlm.nih.gov/data-hub/genome/GCA_900618805.1/)
+Existing RNA-Seq data was retrieved from the following complete RNASeq
+data available in the [NCBI database](https://www.ncbi.nlm.nih.gov/):\
+- SRR19782039 [Exposure to Valsartan &
+Carbamazepine](https://www.ncbi.nlm.nih.gov/sra/SRX15826291%5Baccn%5D)\
+- SRR16771870 [Exposure to a synthetic hormone 17 a-Ethinylestradiol
+(EE2)](https://www.ncbi.nlm.nih.gov/sra/SRX12971792%5Baccn%5D)\
+- SRR7725722 [Diarrhetic Shellfish Poisoning (DSP) toxins associated
+with Harmful Algal Blooms
+(HABs)](https://www.ncbi.nlm.nih.gov/sra/SRX4582204%5Baccn%5D)\
+- SRR13013756
+[Hypoxia](https://www.ncbi.nlm.nih.gov/sra/SRX9464766%5Baccn%5D)\
+- *Mytilus galloprovincialis* [Reference
+Genome](https://www.ncbi.nlm.nih.gov/data-hub/genome/GCA_900618805.1/)
 
 ```{r}
 getwd()
 ```
 
 ### Pulling my reference genome from prefab code provided by NCBI
+
 curled genome and copied just cds file
 
 ```{r, engine='bash', eval=TRUE}
@@ -57,18 +67,20 @@ curled genome and copied just cds file
  
 ```
 
-
-
 # Create the index file to align my short read files to the genes from the MGAL_10
+
 ```{r, engine='bash'}
 /home/shared/kallisto/kallisto \
 index \
 -i ../data/MGAL_cds.index \
 ../data/ncbi_dataset/data/GCA_900618805.1/cds_from_genomic.fna
 ```
+```{bash}
+head ../data/ncbi_dataset/data/GCA_900618805.1/cds_from_genomic.fna
+
+```
 
 # Where is data
-
 
 #Runnning Kallisto
 
@@ -79,7 +91,6 @@ index \
 ```{r, engine='bash', eval=TRUE}
 ls /home/shared/8TB_HDD_02/cnmntgna/GitHub/chris-musselcon/output/ncbi/
 ```
-
 
 ```{r, engine='bash'}
 
@@ -99,7 +110,9 @@ quant -i ../data/MGAL_cds.index \
 
 ```
 
-Getting length mean & SD for the single read sequences in the .fastq files. Code taken from: https://www.biostars.org/p/243552/
+Getting length mean & SD for the single read sequences in the .fastq
+files. Code taken from: https://www.biostars.org/p/243552/
+
 ```{bash}
 
 awk 'BEGIN { t=0.0;sq=0.0; n=0;} ;NR%4==2 {n++;L=length($0);t+=L;sq+=L*L;}END{m=t/n;printf("total %d avg=%f stddev=%f\n",n,m,sq/n-m*m);}' /home/shared/8TB_HDD_02/cnmntgna/GitHub/chris-musselcon/output/ncbi/*.fastq
@@ -107,6 +120,7 @@ awk 'BEGIN { t=0.0;sq=0.0; n=0;} ;NR%4==2 {n++;L=length($0);t+=L;sq+=L*L;}END{m=
 ```
 
 Grabbing only the fastq files
+
 ```{r, eval=FALSE, engine='bash'}
 #Running for .fastq to pick up the other two, since i missed that not all had a 1 or 2
 #how do i get *.fastq files as well? I thought I understood the syntax, but I am still getting it wrong
@@ -118,17 +132,21 @@ quant -i ../data/MGAL_cds.index \
 -t 4 \
 /home/shared/8TB_HDD_02/cnmntgna/GitHub/chris-musselcon/output/ncbi/{}.fastq
 ```
-#DESeq from Kallisto output
-#trouble calling the program from the whole chunk below so I separated it to make sure I'm going to the right place.
+
+#DESeq from Kallisto output #trouble calling the program from the whole
+chunk below so I separated it to make sure I'm going to the right place.
+
 ```{r}
 getwd()
 
 ```
+
 ```{r, engine='bash'}
 cd /home/shared/trinityrnaseq-v2.12.0
 ```
 
 #Kallisto
+
 ```{r, engine='bash'}
 
 perl /home/shared/trinityrnaseq-v2.12.0/util/abundance_estimates_to_matrix.pl \
@@ -179,6 +197,9 @@ length(colnames(data))
 ```
 
 ```{r}
+#compare different manually - compare the synthetic estrogens versus the dsp - 3x3 and drop the valsartan
+
+
 deseq2.colData <- data.frame(condition=factor(c("DSP", "DSP", "Hypoxia", "EE2", "EE2", "EE2", "Valsartan")), 
                              type=factor(rep("single-read", 7)))
 rownames(deseq2.colData) <- colnames(data)
@@ -187,13 +208,16 @@ deseq2.dds <- DESeqDataSetFromMatrix(countData = countmatrix,
                                      colData = deseq2.colData, 
                                      design = ~ condition)
 ```
+
 ```{r}
 
 deseq2.dds <- DESeq(deseq2.dds)
 deseq2.res <- results(deseq2.dds)
 deseq2.res <- deseq2.res[order(rownames(deseq2.res)), ]
 
+head(deseq2.dds)
 ```
+
 
 ```{r}
 
@@ -279,7 +303,6 @@ write.table(tmp.sig, "../output/DEGlist.tab", sep = '\t', row.names = T)
 
 ```
 
-
 ```{r}
 
 deglist <- read.csv("../output/DEGlist.tab", sep = '\t', header = TRUE)
@@ -294,9 +317,8 @@ datatable(deglist)
 
 ```
 
-#Annotation 
-## BLAST to uniprot, use HISAT?
-### Enrichr install/ call
+#Annotation \## BLAST to uniprot, use HISAT? \### Enrichr install/ call
+
 ```{r}
 install.packages("devtools")
 library(devtools)
@@ -304,7 +326,7 @@ install_github("wjawaid/enrichR")
 library("enrichR")
 listEnrichrSites()
 dbs <- listEnrichrDbs()
-
+head(dbs)
 ```
 
 ```{r}
@@ -313,15 +335,10 @@ dbs <- listEnrichrDbs()
 
 ```
 
-
-
-
-
-
-
-
 # Steven's code
+
 #Need to modify for my files, just copying code in first
+
 ```{r}
 
 cg_sp <- read.csv("https://raw.githubusercontent.com/sr320/nb-2022/main/C_gigas/analyses/CgR-blastp-sp.tab", header = FALSE, sep="\t")  %>%
@@ -337,8 +354,8 @@ comb <- left_join(loc, cg_sp, by = c("V2" = "V1")) %>%
   left_join(deglist, by = c("V1" = "RowName"))
 ```
 
-#Same as annotation process
-#Gene enrichment analysis
+#Same as annotation process #Gene enrichment analysis
+
 ```{r}
 gene_deg_status <- res_df %>%
   mutate(degstaus = ifelse(padj < 0.05, 1, 0)) 
@@ -359,9 +376,9 @@ gene_names <- sapply(names(fasta_data), function(x) strsplit(x, " ")[[1]][1])
 gene_lengths_df <- data.frame(geneID = gene_names, length = gene_lengths)
 ```
 
-#Same as annotation process
-#Need GO mappings
-#only run to install packages
+#Same as annotation process #Need GO mappings #only run to install
+packages
+
 ```{r}
 # have to install the package that allows me to call nullp
 install.packages("remotes")
@@ -375,14 +392,3 @@ pwf <- nullp(gene_data, bias.data = gene_lengths)
 
 GO_analysis <- goseq(pwf, gene2cat = "your_organism_GO_mapping")
 ```
-
-
-
-
-
-
-
-
-
-
-
