@@ -97,7 +97,7 @@ ls /home/shared/8TB_HDD_02/cnmntgna/GitHub/chris-musselcon/output/ncbi/
 #mkdir ../output
 mkdir ../output/kallisto_01
 
-#OLD CODE
+#pulling all files for comparison to my index
 
 find /home/shared/8TB_HDD_02/cnmntgna/GitHub/chris-musselcon/output/ncbi/*_1.fastq \
 | xargs basename -s _1.fastq  | xargs -I{} /home/shared/kallisto/kallisto \
