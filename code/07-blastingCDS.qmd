@@ -86,11 +86,31 @@ Subject description: The description of the hit sequence.
 Taxonomy ID: The NCBI taxonomy identifier of the organism to which the hit sequence belongs.
 Gene name: The name of the gene that encodes the hit sequence.
 
+url="https://gannet.fish.washington.edu/seashell/snaps/uniprot_table_r2023_01.tab"  
+
+file_path=" /home/shared/8TB_HDD_02/cnmntgna/GitHub/chris-musselcon/data"    # Replace with your desired file path
+```{bash}
+
+wget -O "uniprot_table_r2023_01.tab" "https://gannet.fish.washington.edu/seashell/snaps/uniprot_table_r2023_01.tab"
+
+```
+
+```{bash}
+
+mv /home/shared/8TB_HDD_02/cnmntgna/GitHub/chris-musselcon/code/uniprot_table_r2023_01.tab  /home/shared/8TB_HDD_02/cnmntgna/GitHub/chris-musselcon/data
+
+mv /home/shared/8TB_HDD_02/cnmntgna/GitHub/chris-musselcon/output/DEGlist.tab
+/home/shared/8TB_HDD_02/cnmntgna/GitHub/chris-musselcon/data
+
+```
+
+#don't rerun this
 ```{r}
 
 spgo <- read.csv("https://gannet.fish.washington.edu/seashell/snaps/uniprot_table_r2023_01.tab", sep = '\t', header = TRUE)
 
 print(spgo)
+
 
 #join cds_blastx.tab with DEGlist.tab by what?
 #How can i get headers?
@@ -108,6 +128,45 @@ cdsBlastx <- read.delim("/home/shared/8TB_HDD_02/cnmntgna/GitHub/chris-musselcon
 
 
 ```
+#don't use chunk 112-116
+```{bash}
+
+curl -O -H Accept: text/plain; format=tab "https://gannet.fish.washington.edu/seashell/snaps/uniprot_table_r2023_01.tab"
+
+```
 
 
+```{bash}
 
+head -2 ../data/cds_blastx.tab
+wc -l ../data/cds_blastx.tab
+
+```
+
+```{bash}
+tr '|' '\t' < ../data/cds_blastx.tab | head -2
+```
+
+```{bash}
+tr '|' '\t' < ../data/cds_blastx.tab \
+> ../data/cds_blastx.tab
+```
+
+```{bash}
+head -2 spgo
+wc -l spgo
+```
+
+```{r}
+#none of these values are accurate for the join - go back and verify what needs to be joined
+
+kbl(
+head(
+  left_join(cdsBlastx, spgo,  by = c("V2" = "Entry")) %>%
+  select(V4, V6, V4, Protein.names, Organism, Gene.Ontology..biological.process., Gene.Ontology.IDs) %>% mutate(V5 = str_replace_all(V1, 
+            pattern = "solid0078_20110412_FRAG_BC_WHITE_WHITE_F3_QV_SE_trimmed", replacement = "Ab"))
+)
+) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
+
+```
