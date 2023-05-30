@@ -1,0 +1,91 @@
+---
+title: "*Mytilus galloprovincialis* differential gene expression in response to contaminant exposure"
+author: "Chris"
+date: "`r format(Sys.time(), '%d %B, %Y')`"  
+output: 
+  html_document:
+    theme: cerulean
+    highlight: zenburn
+    toc: true
+    toc_float: true
+    number_sections: true
+    code_folding: show
+    code_download: true
+editor: 
+  markdown: 
+    wrap: 72
+---
+
+```{r setup, include=FALSE}
+library(knitr)
+library(tidyverse)
+library(kableExtra)
+library(DESeq2)
+library(pheatmap)
+library(RColorBrewer)
+library(data.table)
+library(DT)
+library(Biostrings)
+knitr::opts_chunk$set(
+  echo = TRUE,         # Display code chunks
+  eval = FALSE,         # Evaluate code chunks
+  warning = FALSE,     # Hide warnings
+  message = FALSE,     # Hide messages
+  fig.width = 6,       # Set plot width in inches
+  fig.height = 4,      # Set plot height in inches
+  fig.align = "center" # Align plots to the center
+)
+```
+
+# Data Retrieval
+
+## NCBI & Uniprot Databases
+
+Talk about why I chose my sequences and target contaminants + reference
+genome. Hypothesis-ish level convo
+
+# Workflow
+
+Explain the workflow in one - two general sentences and use the
+subheadings to explain
+
+## RNASeq
+
+This is the type of sequence data I have available  
+
+## QC Note  
+
+Even though I didn't actually do this step I want to explain why it is important and how it could be done with MultiQC
+
+## Kallisto
+
+This aligns my sequences to the reference to support DEG quantificiation
+
+## DESeq2
+
+This quantifies how many differentially expressed genes exist
+
+### Visualization
+
+This is an interim step to look at your DESeq data and see what is
+interesting/ make any general inferences
+
+### Visualization results
+
+How PCA helped me modify my sample comparisons
+
+## Annotation
+
+This will take my gene sequence (cds file) and compare it to the gene
+database on Uniprot/ Swissprot to pick up what the functions of my genes
+are. This is a
+
+### Using BLAST
+
+This is the tool to compare my cds file and the uniprot database
+
+## Gene Enrichment Analysis
+
+This is a table joining problem that I am currently stuck at right now since I am creating the BLAST table to join with an annotation table 
+
+## Final Visualizations and Inferences

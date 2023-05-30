@@ -1,0 +1,113 @@
+---
+title: "Blasting CDS for Gene Annotation"
+author: Chris
+date: "`r format(Sys.time(), '%d %B, %Y')`"  
+output: 
+  html_document:
+    theme: readable
+    highlight: zenburn
+    toc: true
+    toc_float: true
+    number_sections: true
+    code_folding: show
+    code_download: true
+editor: 
+  markdown: 
+    wrap: 72
+---
+
+```{r setup, include=FALSE}
+library(knitr)
+library(tidyverse)
+library(kableExtra)
+library(DESeq2)
+library(pheatmap)
+library(RColorBrewer)
+library(data.table)
+library(DT)
+library(Biostrings)
+knitr::opts_chunk$set(
+  echo = TRUE,         # Display code chunks
+  eval = FALSE,         # Evaluate code chunks
+  warning = FALSE,     # Hide warnings
+  message = FALSE,     # Hide messages
+  fig.width = 6,       # Set plot width in inches
+  fig.height = 4,      # Set plot height in inches
+  fig.align = "center" # Align plots to the center
+)
+```
+
+```{r}
+getwd()
+```
+```{r, engine='bash', eval=TRUE}
+
+ cd /home/shared/8TB_HDD_02/cnmntgna/GitHub/chris-musselcon/data/ncbi_dataset/data/GCA_900618805.1
+ head cds_from_genomic.fna
+ 
+```
+
+#going to call my existing uniprot database made in week 2 to blast my cds file
+#fix my paths for reproducibility purposes
+
+```{r, engine='bash', eval=TRUE}
+
+
+/home/shared/8TB_HDD_02/cnmntgna/Applications/bioinfo/ncbi-blast-2.13.0+/bin/blastx \
+-query /home/shared/8TB_HDD_02/cnmntgna/GitHub/chris-musselcon/data/ncbi_dataset/data/GCA_900618805.1/cds_from_genomic.fna \
+-db /home/shared/8TB_HDD_02/cnmntgna/output/blastdb/uniprot_sprot_r2023_01 \
+-out /home/shared/8TB_HDD_02/cnmntgna/output/cds_blastx.tab \
+-evalue 1E-20 \
+-num_threads 20 \
+-max_target_seqs 1 \
+-outfmt 6
+```
+```{bash}
+
+head /home/shared/8TB_HDD_02/cnmntgna/output/cds_blastx.tab
+mv /home/shared/8TB_HDD_02/cnmntgna/output/cds_blastx.tab /home/shared/8TB_HDD_02/cnmntgna/GitHub/chris-musselcon/data
+```
+
+
+
+# The results from my blast will come out like the line below. Some of the categories that may be represented are listed below the sample line
+Sample line
+lcl|UYJE01000001.1_cds_VDH88702.1_13    sp|Q8BSY0|ASPH_MOUSE    46.124  258     137     2       1633   2406     316     571     3.38e-57        212
+
+Some categoreis of assessment
+Query ID: The identifier of the sequence submitted as the query for the BLAST search.
+Subject ID: The UniProtKB accession number of the hit sequence that the query matched.
+% Identity: The percentage of identical amino acids or nucleotides between the query and hit sequence.
+Alignment length: The length of the alignment between the query and hit sequence.
+E-value: The expected value, which is a measure of the statistical significance of the match.
+Bit score: A measure of the similarity between the query and hit sequences.
+Query coverage: The percentage of the query sequence that is covered by the alignment.
+Subject description: The description of the hit sequence.
+Taxonomy ID: The NCBI taxonomy identifier of the organism to which the hit sequence belongs.
+Gene name: The name of the gene that encodes the hit sequence.
+
+```{r}
+
+spgo <- read.csv("https://gannet.fish.washington.edu/seashell/snaps/uniprot_table_r2023_01.tab", sep = '\t', header = TRUE)
+
+print(spgo)
+
+#join cds_blastx.tab with DEGlist.tab by what?
+#How can i get headers?
+# where do i get any GO Terms or functional data from this?
+
+#change the format of the tables to make them easier to work with
+# Read the tab-separated table
+
+cdsBlastx <- read.delim("/home/shared/8TB_HDD_02/cnmntgna/GitHub/chris-musselcon/data/cds_blastx.tab", sep = "\t", header= FALSE)
+#want to join by V1
+
+# Write the data to a comma-separated values (CSV) file
+#cds<- write.csv(cdsBlastx, "cds.csv", row.names= FALSE)
+#view(cds)
+
+
+```
+
+
+
