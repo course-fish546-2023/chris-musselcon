@@ -50,7 +50,7 @@ getwd()
 #going to call my existing uniprot database made in week 2 to blast my cds file
 #fix my paths for reproducibility purposes
 
-```{r, engine='bash', eval=TRUE}
+```{r, engine='bash'}
 
 
 /home/shared/8TB_HDD_02/cnmntgna/Applications/bioinfo/ncbi-blast-2.13.0+/bin/blastx \
@@ -158,27 +158,100 @@ head ../data/DEGlist.tab
 ```
 ```{bash}
 
-head ../data/DEGlist.tab
+head ../data/cds.tab
+
+```
+trying to merge cds and DEGlist before merging with uniprot table
+```{r}
+# Assuming you have a data frame named "df"
+num_columns <- ncol("cds.tab")
+print(num_columns)
+
+```
+trying to merge cds and DEGlist before merging with uniprot table
+```{r}
+# Assuming you have a data frame named "df"
+num_rows <- nrow("cds.tab")
+print(num_rows)
 
 ```
 
-```{bash}
 
-head ../data/uniprot_table_r2023_01.tab
+going to verify everything is formatted correctly since no column nor row is showing up
+```{r}
+getwd()
+cds <- read.table("/home/shared/8TB_HDD_02/cnmntgna/GitHub/chris-musselcon/data/cds.tab", sep = "\t", header = FALSE)
+deg <- read.table("/home/shared/8TB_HDD_02/cnmntgna/GitHub/chris-musselcon/data/DEGlist.tab", sep = "\t", header = TRUE)
 
+
+```
+extract the actual term i need from cds before i merge with deg.
+```{r}
+library(tidyverse)
+
+# Read the TSV file into a data frame
+cds1 <- read.table("/home/shared/8TB_HDD_02/cnmntgna/GitHub/chris-musselcon/data/cds.tab", sep = "\t", header = FALSE)
+
+# Separate the column into multiple columns based on a delimiter
+cds2 <- separate(cds1, V2, into = c("Column 1", "Column 2", "Column 3"), sep = "\t")
+
+# Write the updated data frame back to a TSV file
+write.table(cds2, file = "/home/shared/8TB_HDD_02/cnmntgna/GitHub/chris-musselcon/data/newcds.tab", sep = "\t", row.names = FALSE)
+```
+
+trying to fix deg column data being used as row names
+```{r}
+# Create a new column with the values from row names
+deg$column_name <- rownames(deg)
+
+# Reset the row names to default numeric indices
+rownames(deg) <- NULL
 ```
 
 
 ```{r}
-#none of these values are accurate for the join - go back and verify what needs to be joined
 
-kbl(
-head(
-  left_join(cdsBlastx, spgo,  by = c("V2" = "Entry")) %>%
-  select(V4, V6, V4, Protein.names, Organism, Gene.Ontology..biological.process., Gene.Ontology.IDs) %>% mutate(V5 = str_replace_all(V1, 
-            pattern = "solid0078_20110412_FRAG_BC_WHITE_WHITE_F3_QV_SE_trimmed", replacement = "Ab"))
-)
+cdsDEG <- merge(cds2, deg, by.x = 1, by.y = 7 )
+head(cdsDEG)
+```
+prep uniprot table for joining
+```{bash}
+head -2 ../data/uniprot_table_r2023_01.tab
+wc -l ../data/uniprot_table_r2023_01.tab
+```
+
+prep uniprot table for joining
+```{r}
+uni<- read.csv("../data/uniprot_table_r2023_01.tab", sep = '\t', header = TRUE)
+  
+```
+/home/shared/8TB_HDD_02/cnmntgna/GitHub/chris-musselcon/data/uniprot_table_r2023_01.tab
+
+```{r}
+library(kableExtra)
+library(knitr)
+library(dplyr)
+library(readr)
+
+# Generate table
+table<- kbl(
+  head(
+    left_join(cdsDEG, uni , by = c("Column 2" = "Entry")) %>%
+      select(V3, V4, pvalue, Protein.names, Organism, Gene.Ontology..biological.process., Gene.Ontology.IDs))
 ) %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
 
+table_content<- capture.output(table)
+
+table_content <- gsub("^\\s+", "", table_content)
+
+# Save table as tab-delimited file
+write_lines(table_content, "/home/shared/8TB_HDD_02/cnmntgna/GitHub/chris-musselcon/data/table.tab")
+
 ```
+```{bash}
+
+head ../data/table.tab
+
+```
+
