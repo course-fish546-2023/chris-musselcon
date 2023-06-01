@@ -103,23 +103,11 @@ mv /home/shared/8TB_HDD_02/cnmntgna/GitHub/chris-musselcon/output/DEGlist.tab
 
 ```
 
-#don't rerun this
+
 ```{r}
-
-spgo <- read.csv("https://gannet.fish.washington.edu/seashell/snaps/uniprot_table_r2023_01.tab", sep = '\t', header = TRUE)
-
-print(spgo)
-
-
-#join cds_blastx.tab with DEGlist.tab by what?
-#How can i get headers?
-# where do i get any GO Terms or functional data from this?
-
-#change the format of the tables to make them easier to work with
-# Read the tab-separated table
-
+#needed this to make the cds table accessible
 cdsBlastx <- read.delim("/home/shared/8TB_HDD_02/cnmntgna/GitHub/chris-musselcon/data/cds_blastx.tab", sep = "\t", header= FALSE)
-#want to join by V1
+
 
 # Write the data to a comma-separated values (CSV) file
 #cds<- write.csv(cdsBlastx, "cds.csv", row.names= FALSE)
@@ -128,26 +116,58 @@ cdsBlastx <- read.delim("/home/shared/8TB_HDD_02/cnmntgna/GitHub/chris-musselcon
 
 ```
 
+
 ```{bash}
 
-head -2 ../data/cds_blastx.tab
-wc -l ../data/cds_blastx.tab
+head -2 ../code/cds.csv
+wc -l ../code/cds.csv
 
 ```
 
 ```{bash}
-tr '|' '\t' < ../data/cds_blastx.tab | head -2
+tr '|' '\t' < ../code/cds.csv | head -2
 ```
 
 ```{bash}
-tr '|' '\t' < ../data/cds_blastx.tab \
-> ../data/cds_blastx.tab
+tr '|' '\t' < ../code/cds.csv \
+> ../data/cds.csv
 ```
 
 ```{bash}
-head -2 spgo
-wc -l spgo
+
+head ../data/cds.csv
 ```
+
+```{bash}
+head -2 ../output/DEGlist.tab
+wc -l ../output/DEGlist.tab
+```
+```{bash}
+tr '|' '\t' < ../output/DEGlist.tab | head -2
+```
+
+```{bash}
+tr '|' '\t' < ../output/DEGlist.tab \
+> ../data/DEGlist.tab
+```
+
+```{bash}
+
+head ../data/DEGlist.tab
+
+```
+```{bash}
+
+head ../data/DEGlist.tab
+
+```
+
+```{bash}
+
+head ../data/uniprot_table_r2023_01.tab
+
+```
+
 
 ```{r}
 #none of these values are accurate for the join - go back and verify what needs to be joined
