@@ -36,7 +36,7 @@ knitr::opts_chunk$set(
   fig.align = "center" # Align plots to the center
 )
 ```
-
+Separate these sections for the final presentation
 # Data Retrieval
 
 ## NCBI & Uniprot Databases

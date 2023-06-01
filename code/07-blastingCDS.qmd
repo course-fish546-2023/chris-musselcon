@@ -67,11 +67,6 @@ getwd()
 head /home/shared/8TB_HDD_02/cnmntgna/data/cds_blastx.tab
 
 ```
-```{bash}
-
-tail /home/shared/8TB_HDD_02/cnmntgna/data/cds_blastx.tab
-
-```
 
 
 # The results from my blast will come out like the line below. Some of the categories that may be represented are listed below the sample line
@@ -132,13 +127,6 @@ cdsBlastx <- read.delim("/home/shared/8TB_HDD_02/cnmntgna/GitHub/chris-musselcon
 
 
 ```
-#don't use chunk 112-116
-```{bash}
-
-curl -O -H Accept: text/plain; format=tab "https://gannet.fish.washington.edu/seashell/snaps/uniprot_table_r2023_01.tab"
-
-```
-
 
 ```{bash}
 
