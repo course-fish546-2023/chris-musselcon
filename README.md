@@ -1,4 +1,6 @@
 ### Utilizing RNASeq for Differential Gene Expression in *Mytilus galloprovincialis*     
+[![DOI](https://zenodo.org/badge/624256861.svg)](https://zenodo.org/badge/latestdoi/624256861)  
+
 
 I'm using differential gene expression to help me draw conclusions about what common or unique physiological responses are displayed by *M. galloprovincials* when exposed to various anthropogenic stressors.  
 
