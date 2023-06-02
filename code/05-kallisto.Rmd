@@ -35,7 +35,8 @@ knitr::opts_chunk$set(
 ```
 
 
-**Data**\
+# **Data**
+
 Existing RNA-Seq data was retrieved from the following complete RNASeq data available in the [NCBI database](https://www.ncbi.nlm.nih.gov/):\
 - SRR19782039 [Exposure to Valsartan & Carbamazepine](https://www.ncbi.nlm.nih.gov/sra/SRX15826291%5Baccn%5D)\
 - SRR16771870 [Exposure to a synthetic hormone 17 a-Ethinylestradiol (EE2)](https://www.ncbi.nlm.nih.gov/sra/SRX12971792%5Baccn%5D)\
@@ -50,18 +51,13 @@ cp /home/shared/8TB_HDD_01/sr320/ncbi/ncbi_dataset/data/GCA_900618805.1/cds_from
 ```
 
 
-
-
-### Pulling my reference genome from prefab code provided by NCBI
-curled genome and copied just cds file
-
 ```{r, engine='bash', eval=TRUE}
 head ../data/cds_from_genomic.fna
 ```
 
+# Index Gene Set
 
-
-# Create the index file to align my short read files to the genes from the MGAL_10
+Create the index file to align my short read files to the genes from the MGAL_10
 ```{r, engine='bash'}
 /home/shared/kallisto/kallisto \
 index \
@@ -70,12 +66,7 @@ index \
 ```
 
 
-
-
-# Where is data
-
-
-#Runnning Kallisto
+# Runnning Kallisto
 
 ```{r, engine='bash', eval=TRUE}
 /home/shared/kallisto/kallisto quant
@@ -88,8 +79,6 @@ ls /home/shared/8TB_HDD_02/cnmntgna/GitHub/chris-musselcon/output/ncbi/
 ```{r, engine='bash'}
 #mkdir ../output
 #mkdir ../output/kallisto_01
-
-#OLD CODE
 
 find /home/shared/8TB_HDD_02/cnmntgna/GitHub/chris-musselcon/output/ncbi/*_1.fastq \
 | xargs basename -s _1.fastq  | xargs -I{} /home/shared/kallisto/kallisto \
