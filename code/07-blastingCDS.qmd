@@ -234,21 +234,22 @@ library(dplyr)
 library(readr)
 
 # Generate table
-table<- kbl(
+kbl(
   head(
     left_join(cdsDEG, uni , by = c("Column 2" = "Entry")) %>%
       select(V3, V4, pvalue, Protein.names, Organism, Gene.Ontology..biological.process., Gene.Ontology.IDs))
 ) %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
 
-table_content<- capture.output(table)
+#table_content<- capture.output(table)
 
-table_content <- gsub("^\\s+", "", table_content)
+#table_content <- gsub("^\\s+", "", table_content)
 
 # Save table as tab-delimited file
-write_lines(table_content, "/home/shared/8TB_HDD_02/cnmntgna/GitHub/chris-musselcon/data/table.tab")
+#write_lines(table_content, "/home/shared/8TB_HDD_02/cnmntgna/GitHub/chris-musselcon/data/table.tab")
 
 ```
+
 ```{bash}
 
 head ../data/table.tab

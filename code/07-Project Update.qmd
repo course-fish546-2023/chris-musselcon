@@ -36,56 +36,479 @@ knitr::opts_chunk$set(
   fig.align = "center" # Align plots to the center
 )
 ```
-Separate these sections for the final presentation
-# Data Retrieval
+# Project Description  
+[![mytilus reef](https://github.com/course-fish546-2023/chris-musselcon/blob/main/assets/mytilusReef.png?raw=true)]  
+
+Climate change is an unavoidable suite of stressors for aquatic organisms and its effects are exacerbated by the personal care products and pharmaceuticals we use regularly. Thinking about what that multiple-stressor environment looks like and understanding its impact on aquatic organisms, we will turn our attention to marine mussels, *Mytilus* spp. They are an indicator organism for environmental health and inferences to those impacts to human health. I am exploring just how *Mytilus* spp. respond to man-made contaminants and to do that I'm using differential gene expression to help me draw conclusions about what common or unique physiological responses are displayed by *M. galloprovincials* when exposed to various anthropogenic stressors. This molecular-based technique ill help me get ot the heart of what physiological functions could be impaired.
+
+
+# Data  
+
+Since I want to explore a 'hunch' before making larger experimental choices, it makes sense to look at what's out there. I chose four different types of stressors and a solid reference genome from existing sequenced data in the NCBI & Uniprot databases. Listed below are the data I chose:
+
+* [Exposure to Valsartan & Carbamazepine](https://www.ncbi.nlm.nih.gov/sra/SRX15826291[accn])
+* [Exposure to a synthetic hormone 17 a-Ethinylestradiol (EE2)](https://www.ncbi.nlm.nih.gov/sra/SRX12971792[accn])
+* [Diarrhetic Shellfish Poisoning (DSP) toxins associated with Harmful Algal Blooms (HABs)](https://www.ncbi.nlm.nih.gov/sra/SRX4582204[accn])
+* [Hypoxia](https://www.ncbi.nlm.nih.gov/sra/SRX9464766[accn])  
+* [*Mytilus galloprovincialis* Reference](https://www.ncbi.nlm.nih.gov/data-hub/genome/GCA_025277285.1/) 
 
 ## NCBI & Uniprot Databases
 
-Talk about why I chose my sequences and target contaminants + reference
-genome. Hypothesis-ish level convo
+Existing RNA-Seq data was retrieved from complete RNASeq data available in the [NCBI database](https://www.ncbi.nlm.nih.gov/) along wiht the reference genome. These very large, 'crowd sourced', and free sites provide the foundation for many types of molecular level work - give it a browse!  
+
+From this database I was able to select a refernce, and examples of broad categories of stressors; organic pharmaceutical contaminants like Valsartan (blood pressure medication) and Carbemazepine (seizure), endocrine disruptoring compounds like synthetic Estrogen, biotoxins like those created by harmful algal blooms, and finally abiotic stressors like hypoxia. 
 
 # Workflow
 
-Explain the workflow in one - two general sentences and use the
-subheadings to explain
+```{mermaid}
+flowchart LR
+  A[Study Organism] --> B[Data Search] --> C[Reproducible Bioinformatics w/ GitHub]
+  C --> D{Tools for Analysis}
+  D --> E[RNASeq -> Data type]
+  D --> F[Kallisto & DESeq -> Quantifyng DEGs]
+  D --> G[RStudio -> Visualizing Results]
+  D --> H[Uniprot & Blast -> What *are* the DEGs?]
+  D --> I[Annotation & Functional Gene Enrichment -> Next Steps]
+```
+[![ghicon](https://github.com/course-fish546-2023/chris-musselcon/blob/main/assets/ghicon.png?raw=true)]
+We've already covered the study organism and the data search - lets give a shoutout to the workhorse platforms of the show: GitHub and RStudio/ R. Both polatforms are free, can be connected, and keep you from accidentally 'losing' your work when you aren't using the best file structure practices. Check out [Happy Git](https://happygitwithr.com/) for more information on how this symbiotic relationship can be attained.  
 
 ## RNASeq
 
-This is the type of sequence data I have available  
+This is the type of sequence data I have available to work with from NCBI so I have to retrieve it. 
+### Pull out all of the sequences from the exposures.
+```{bash}
+
+/home/shared/sratoolkit.3.0.2-ubuntu64/bin/./fasterq-dump \
+--outdir /home/shared/8TB_HDD_02/cnmntgna/GitHub/chris-musselcon/output/ncbi \
+--progress \
+SRR19782039 \
+SRR13013756 \
+SRR7725722 \
+SRR16771870 
+
+```
+
+### Pulling my reference genome from prefab code provided by NCBI & verify where I am working
+```{bash}
+
+cd ../data
+ls
+
+```
+
+```{bash}
+
+# grab the reference
+cd ../data
+
+curl -OJX GET "https://api.ncbi.nlm.nih.gov/datasets/v2alpha/genome/accession/GCA_900618805.1/download?include_annotation_type=GENOME_FASTA,GENOME_GFF,RNA_FASTA,CDS_FASTA,PROT_FASTA,SEQUENCE_REPORT&filename=GCA_900618805.1.zip" -H "Accept: application/zip"
+
+unzip GCA_900618805.1.zip /chris-musselcon/data 
+
+```
+:::
 
 ## QC Note  
 
-Even though I didn't actually do this step I want to explain why it is important and how it could be done with MultiQC
+Even though I didn't  do this step, it is important and how it could be done with [MultiQC](https://multiqc.info/docs/).
+
+:::
 
 ## Kallisto
 
-This aligns my sequences to the reference to support DEG quantificiation
+This process aligns my sequences to the reference to support DEG quantification.   
+```{r, engine='bash', eval=TRUE}
+
+ cd /home/shared/8TB_HDD_02/cnmntgna/GitHub/chris-musselcon/data/ncbi_dataset/data/GCA_900618805.1
+ head cds_from_genomic.fna
+ 
+```
+
+Create the index file to align my short read files to the genes from the MGAL_10 (reference genome)
+```{r, engine='bash'}
+/home/shared/kallisto/kallisto \
+index \
+-i ../data/MGAL_cds.index \
+../data/ncbi_dataset/data/GCA_900618805.1/cds_from_genomic.fna
+```
+
+Let's take a look
+```{bash}
+head ../data/ncbi_dataset/data/GCA_900618805.1/cds_from_genomic.fna
+
+```
+[![cds head](https://github.com/course-fish546-2023/chris-musselcon/blob/main/assets/reference_head.png?raw=true)]  
+
+```{r, engine='bash', eval=TRUE}
+/home/shared/kallisto/kallisto quant
+```
+
+```{r, engine='bash', eval=TRUE}
+ls /home/shared/8TB_HDD_02/cnmntgna/GitHub/chris-musselcon/output/ncbi/
+```
+
+```{r, engine='bash'}
+
+#mkdir ../output
+mkdir ../output/kallisto_01
+
+#pulling all files for comparison to my index
+
+find /home/shared/8TB_HDD_02/cnmntgna/GitHub/chris-musselcon/output/ncbi/*_1.fastq \
+| xargs basename -s _1.fastq  | xargs -I{} /home/shared/kallisto/kallisto \
+quant -i ../data/MGAL_cds.index \
+-o ../output/kallisto_01/{} \
+-t 4 \
+/home/shared/8TB_HDD_02/cnmntgna/GitHub/chris-musselcon/output/ncbi/{}_1.fastq \
+/home/shared/8TB_HDD_02/cnmntgna/GitHub/chris-musselcon/output/ncbi/{}_2.fastq \
+
+
+```
+
+Getting length mean & SD for the single read sequences in the .fastq
+files. Code taken from: https://www.biostars.org/p/243552/
+```{bash}
+
+awk 'BEGIN { t=0.0;sq=0.0; n=0;} ;NR%4==2 {n++;L=length($0);t+=L;sq+=L*L;}END{m=t/n;printf("total %d avg=%f stddev=%f\n",n,m,sq/n-m*m);}' /home/shared/8TB_HDD_02/cnmntgna/GitHub/chris-musselcon/output/ncbi/*.fastq
+
+```
+
+Grabbing only the fastq files
+```{r, eval=FALSE, engine='bash'}
+
+find /home/shared/8TB_HDD_02/cnmntgna/GitHub/chris-musselcon/output/ncbi/*.fastq \
+| xargs basename -s .fastq  | xargs -I{} /home/shared/kallisto/kallisto \
+quant -i ../data/MGAL_cds.index \
+--single -l 92 -s 405 \
+-o ../output/kallisto_01/{} \
+-t 4 \
+/home/shared/8TB_HDD_02/cnmntgna/GitHub/chris-musselcon/output/ncbi/{}.fastq
+```
+
+```{r, engine='bash'}
+
+perl /home/shared/trinityrnaseq-v2.12.0/util/abundance_estimates_to_matrix.pl \
+--est_method kallisto \
+    --gene_trans_map none \
+    --out_prefix /home/shared/8TB_HDD_02/cnmntgna/GitHub/chris-musselcon/output/kallisto_01 \
+    --name_sample_by_basedir \
+    /home/shared/8TB_HDD_02/cnmntgna/GitHub/chris-musselcon/output/kallisto_01/SRR7725722/abundance.tsv \
+    /home/shared/8TB_HDD_02/cnmntgna/GitHub/chris-musselcon/output/kallisto_01/SRR7725722_1/abundance.tsv \
+    /home/shared/8TB_HDD_02/cnmntgna/GitHub/chris-musselcon/output/kallisto_01/SRR7725722_2/abundance.tsv \
+    /home/shared/8TB_HDD_02/cnmntgna/GitHub/chris-musselcon/output/kallisto_01/SRR13013756/abundance.tsv \
+    /home/shared/8TB_HDD_02/cnmntgna/GitHub/chris-musselcon/output/kallisto_01/SRR16771870/abundance.tsv \
+    /home/shared/8TB_HDD_02/cnmntgna/GitHub/chris-musselcon/output/kallisto_01/SRR16771870_1/abundance.tsv \
+    /home/shared/8TB_HDD_02/cnmntgna/GitHub/chris-musselcon/output/kallisto_01/SRR16771870_2/abundance.tsv \
+    /home/shared/8TB_HDD_02/cnmntgna/GitHub/chris-musselcon/output/kallisto_01/SRR19782039/abundance.tsv
+
+```
+
+Let's get this into a manageable format we can feed to DESeq and followup with visualization.
+```{r}
+
+countmatrix <- read.delim("../output/kallisto_01.isoform.counts.matrix", header = TRUE, sep = '\t')
+rownames(countmatrix) <- countmatrix$X
+countmatrix <- countmatrix[,-1]
+head(countmatrix)
+#tail(countmatrix)
+#dim(countmatrix)
+
+```
+
+```{r}
+
+countmatrix <- round(countmatrix, 0)
+str(countmatrix)
+```
+
+```{r}
+
+dim(countmatrix)
+#dim(deseq2.colData)
+
+```
+
+```{r}
+
+length(colnames(data))
+
+```
 
 ## DESeq2
 
-This quantifies how many differentially expressed genes exist
+This quantifies how many differentially expressed genes exist based on the parameters we set. We will get the data into a dataframe for review.
+```{r}
 
-### Visualization
+deseq2.colData <- data.frame(condition=factor(c("DSP", "DSP", "Hypoxia", "EE2", "EE2", "EE2", "Valsartan")), 
+                             type=factor(rep("single-read", 7)))
+rownames(deseq2.colData) <- colnames(data)
+dim(deseq2.colData)
+deseq2.dds <- DESeqDataSetFromMatrix(countData = countmatrix,
+                                     colData = deseq2.colData, 
+                                     design = ~ condition)
+```
 
-This is an interim step to look at your DESeq data and see what is
-interesting/ make any general inferences
+```{r}
 
-### Visualization results
+deseq2.dds <- DESeq(deseq2.dds)
+deseq2.res <- results(deseq2.dds)
+deseq2.res <- deseq2.res[order(rownames(deseq2.res)), ]
 
-How PCA helped me modify my sample comparisons
+head(deseq2.dds)
+```
+
+## Visualization
+
+This is an interim step to look at your DESeq data and see what is interesting/ make any general inferences.
+### PCA Plot
+```{r}
+
+vsd <- vst(deseq2.dds, blind = FALSE)
+plotPCA(vsd, intgroup = "condition")
+
+```
+[![PCA](https://github.com/course-fish546-2023/chris-musselcon/blob/main/assets/pca.png?raw=true)]
+
+```{r}
+
+# Select top 50 differentially expressed genes - is it valuable to select more than 50?
+res <- results(deseq2.dds)
+res_ordered <- res[order(res$padj), ]
+top_genes <- row.names(res_ordered)[1:50]
+
+# Extract counts and normalize
+counts <- counts(deseq2.dds, normalized = TRUE)
+counts_top <- counts[top_genes, ]
+
+# Log-transform counts
+log_counts_top <- log2(counts_top + 1)
+
+# Generate heatmap
+pheatmap(log_counts_top, scale = "row")
+
+```
+
+Our PCA shows strong clustering and warrants further review.
+### Heatmap
+```{r}
+#what are we doing here and how do I get it to compare the others against each other?
+head(deseq2.res)
+
+```
+[![heatmap](https://github.com/course-fish546-2023/chris-musselcon/blob/main/assets/heatmap.png?raw=true)]
+
+```{r}
+
+# Count number of hits with adjusted p-value less then 0.05
+dim(deseq2.res[!is.na(deseq2.res$padj) & deseq2.res$padj <= 0.05, ])
+
+```
+
+Our heatmap shows us the contaminant sequences labeled below the color blocks on the X-axis, and up-regulated (red) or down-regulated (blue) genes and the y-axis. When we go back and match the sequence numbers we see confirmation of the result of the PCA. Now we want to look at how many DEGs are statistically significant.
+### Volcano Plots
+```{r}
+
+tmp <- deseq2.res
+# The main plot
+plot(tmp$baseMean, tmp$log2FoldChange, pch=20, cex=0.45, ylim=c(-3, 3), log="x", col="darkgray",
+     main="DEG Valsartan vs DSP (pval <= 0.05)",
+     xlab="mean of normalized counts",
+     ylab="Log2 Fold Change")
+# Getting the significant points and plotting them again so they're a different color
+tmp.sig <- deseq2.res[!is.na(deseq2.res$padj) & deseq2.res$padj <= 0.05, ]
+points(tmp.sig$baseMean, tmp.sig$log2FoldChange, pch=20, cex=0.45, col="red")
+# 2 FC lines
+abline(h=c(-1,1), col="blue")
+
+```
+[![volcano](https://github.com/course-fish546-2023/chris-musselcon/blob/main/assets/volcano1.png?raw=true)]
+
+```{r}
+
+# Prepare the data for plotting
+res_df <- as.data.frame(deseq2.res)
+res_df$gene <- row.names(res_df)
+
+# Create volcano plot
+volcano_plot <- ggplot(res_df, aes(x = log2FoldChange, y = -log10(padj), color = padj < 0.05)) +
+  geom_point(alpha = 0.6, size = 1.5) +
+  scale_color_manual(values = c("grey", "red")) +
+  labs(title = "Volcano Plot",
+       x = "Log2 Fold Change",
+       y = "-Log10 Adjusted P-value",
+       color = "Significantly\nDifferentially Expressed") +
+  theme_minimal() +
+  theme(panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        legend.position = "top")
+
+print(volcano_plot)
+
+```
+[![volcano](https://github.com/course-fish546-2023/chris-musselcon/blob/main/assets/volcano.png?raw=true)]
+
+
+Now we have something to work with, so we create a result table for futher work.
+```{r}
+
+write.table(tmp.sig, "../output/DEGlist.tab", sep = '\t', row.names = T)
+
+```
 
 ## Annotation
 
-This will take my gene sequence (cds file) and compare it to the gene
-database on Uniprot/ Swissprot to pick up what the functions of my genes
-are. This is a
+This will take my annotated reference gene sequence (cds file) and compare it to the result table of differentially expressed genes we created above and a reference of all the known proteins in the Uniprot protein database so we can blast them against each other and pick up what the functions of the DEGs may be.
 
-### Using BLAST
+### Using BLAST  
+This is the tool to compare my cds file and the uniprot database. Going to call my existing uniprot database made in week 2 to blast my cds file
+```{r, engine='bash'}
 
-This is the tool to compare my cds file and the uniprot database
 
-## Gene Enrichment Analysis
+/home/shared/8TB_HDD_02/cnmntgna/Applications/bioinfo/ncbi-blast-2.13.0+/bin/blastx \
+-query /home/shared/8TB_HDD_02/cnmntgna/GitHub/chris-musselcon/data/ncbi_dataset/data/GCA_900618805.1/cds_from_genomic.fna \
+-db /home/shared/8TB_HDD_02/cnmntgna/output/blastdb/uniprot_sprot_r2023_01 \
+-out /home/shared/8TB_HDD_02/cnmntgna/data/cds_blastx.tab \
+-evalue 1E-20 \
+-num_threads 20 \
+-max_target_seqs 1 \
+-outfmt 6
+```
+```{bash}
 
-This is a table joining problem that I am currently stuck at right now since I am creating the BLAST table to join with an annotation table 
+head /home/shared/8TB_HDD_02/cnmntgna/data/cds_blastx.tab
 
-## Final Visualizations and Inferences
+```
+
+### Tables on tables on tables!
+This is my annotated reference genome.
+```{bash}
+
+head -2 ../code/cds.csv
+wc -l ../code/cds.csv
+
+```
+
+Fixing the format for a clean merge/ join.
+```{bash}
+tr '|' '\t' < ../code/cds.csv | head -2
+```
+
+```{bash}
+tr '|' '\t' < ../code/cds.csv \
+> ../data/cds.csv
+```
+
+```{bash}
+
+head ../data/cds.csv
+```
+
+This is the list of DEGs generated from DESeq and will also be prepared for merging/ joining
+```{bash}
+head -2 ../output/DEGlist.tab
+wc -l ../output/DEGlist.tab
+```
+```{bash}
+tr '|' '\t' < ../output/DEGlist.tab | head -2
+```
+
+```{bash}
+tr '|' '\t' < ../output/DEGlist.tab \
+> ../data/DEGlist.tab
+```
+
+```{bash}
+
+head ../data/DEGlist.tab
+
+```
+```{bash}
+
+head ../data/cds.tab
+
+```
+
+Verify everything is formatted correctly 
+```{r}
+getwd()
+cds <- read.table("/home/shared/8TB_HDD_02/cnmntgna/GitHub/chris-musselcon/data/cds.tab", sep = "\t", header = FALSE)
+deg <- read.table("/home/shared/8TB_HDD_02/cnmntgna/GitHub/chris-musselcon/data/DEGlist.tab", sep = "\t", header = TRUE)
+
+
+```
+
+Extract the actual term I need from cds before I merge with deg.
+```{r}
+library(tidyverse)
+
+# Read the TSV file into a data frame
+cds1 <- read.table("/home/shared/8TB_HDD_02/cnmntgna/GitHub/chris-musselcon/data/cds.tab", sep = "\t", header = FALSE)
+
+# Separate the column into multiple columns based on a delimiter
+cds2 <- separate(cds1, V2, into = c("Column 1", "Column 2", "Column 3"), sep = "\t")
+
+# Write the updated data frame back to a TSV file
+write.table(cds2, file = "/home/shared/8TB_HDD_02/cnmntgna/GitHub/chris-musselcon/data/newcds.tab", sep = "\t", row.names = FALSE)
+```
+
+Fixing deg column data being used as row names
+```{r}
+# Create a new column with the values from row names
+deg$column_name <- rownames(deg)
+
+# Reset the row names to default numeric indices
+rownames(deg) <- NULL
+```
+
+Merge cds and DEGlist before merging with Uniprot protein table
+```{r}
+
+cdsDEG <- merge(cds2, deg, by.x = 1, by.y = 7 )
+head(cdsDEG)
+```
+
+Prep Uniprot table for joining
+```{bash}
+head -2 ../data/uniprot_table_r2023_01.tab
+wc -l ../data/uniprot_table_r2023_01.tab
+```
+
+```{r}
+uni<- read.csv("../data/uniprot_table_r2023_01.tab", sep = '\t', header = TRUE)
+  
+```
+
+Join all three tables and take a look at the list.
+```{r}
+library(kableExtra)
+library(knitr)
+library(dplyr)
+library(readr)
+
+# Generate table
+kbl(
+  head(
+    left_join(cdsDEG, uni , by = c("Column 2" = "Entry")) %>%
+      select(V3, V4, pvalue, Protein.names, Organism, Gene.Ontology..biological.process., Gene.Ontology.IDs))
+) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
+
+#table_content<- capture.output(table)
+
+#table_content <- gsub("^\\s+", "", table_content)
+
+# Save table as tab-delimited file
+#write_lines(table_content, "/home/shared/8TB_HDD_02/cnmntgna/GitHub/chris-musselcon/data/table.tab")
+
+```
+
+My table is acting up, so it will be a mystery until resolved.
+[![mystery table](https://github.com/course-fish546-2023/chris-musselcon/blob/main/assets/mysteryGO.png?raw=true)]  
+
+## Next Steps  
+
+* Functional Gene Enrichment
+* Physiological inference
+* Preliminary conclusions & any further evaluation of targeted processes
+
