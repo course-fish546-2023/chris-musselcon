@@ -8,12 +8,9 @@ output:
     highlight: zenburn
     toc: true
     toc_float: true
-    number_sections: true
+    toc_depth: 3
     code_folding: show
     code_download: true
-editor: 
-  markdown: 
-    wrap: 72
 ---
 
 ```{r setup, include=FALSE}
@@ -31,32 +28,33 @@ knitr::opts_chunk$set(
   eval = FALSE,         # Evaluate code chunks
   warning = FALSE,     # Hide warnings
   message = FALSE,     # Hide messages
-  fig.width = 6,       # Set plot width in inches
-  fig.height = 4,      # Set plot height in inches
+  fig.width = 10,       # Set plot width in inches
+  fig.height = 10,      # Set plot height in inches
   fig.align = "center" # Align plots to the center
 )
 ```
-# Project Description  
-[![mytilus reef](https://github.com/course-fish546-2023/chris-musselcon/blob/main/assets/mytilusReef.png?raw=true)]  
+
+# Project Description
+
+![*Mytilus galloprovincialis*](https://github.com/course-fish546-2023/chris-musselcon/blob/main/assets/mytilusReef.png?raw=true)
 
 Climate change is an unavoidable suite of stressors for aquatic organisms and its effects are exacerbated by the personal care products and pharmaceuticals we use regularly. Thinking about what that multiple-stressor environment looks like and understanding its impact on aquatic organisms, we will turn our attention to marine mussels, *Mytilus* spp. They are an indicator organism for environmental health and inferences to those impacts to human health. I am exploring just how *Mytilus* spp. respond to man-made contaminants and to do that I'm using differential gene expression to help me draw conclusions about what common or unique physiological responses are displayed by *M. galloprovincials* when exposed to various anthropogenic stressors. This molecular-based technique ill help me get ot the heart of what physiological functions could be impaired.
 
-
-# Data  
+# Data
 
 Since I want to explore a 'hunch' before making larger experimental choices, it makes sense to look at what's out there. I chose four different types of stressors and a solid reference genome from existing sequenced data in the NCBI & Uniprot databases. Listed below are the data I chose:
 
-* [Exposure to Valsartan & Carbamazepine](https://www.ncbi.nlm.nih.gov/sra/SRX15826291[accn])
-* [Exposure to a synthetic hormone 17 a-Ethinylestradiol (EE2)](https://www.ncbi.nlm.nih.gov/sra/SRX12971792[accn])
-* [Diarrhetic Shellfish Poisoning (DSP) toxins associated with Harmful Algal Blooms (HABs)](https://www.ncbi.nlm.nih.gov/sra/SRX4582204[accn])
-* [Hypoxia](https://www.ncbi.nlm.nih.gov/sra/SRX9464766[accn])  
-* [*Mytilus galloprovincialis* Reference](https://www.ncbi.nlm.nih.gov/data-hub/genome/GCA_025277285.1/) 
+-   [Exposure to Valsartan & Carbamazepine](https://www.ncbi.nlm.nih.gov/sra/SRX15826291%5Baccn%5D)
+-   [Exposure to a synthetic hormone 17 a-Ethinylestradiol (EE2)](https://www.ncbi.nlm.nih.gov/sra/SRX12971792%5Baccn%5D)
+-   [Diarrhetic Shellfish Poisoning (DSP) toxins associated with Harmful Algal Blooms (HABs)](https://www.ncbi.nlm.nih.gov/sra/SRX4582204%5Baccn%5D)
+-   [Hypoxia](https://www.ncbi.nlm.nih.gov/sra/SRX9464766%5Baccn%5D)\
+-   [*Mytilus galloprovincialis* Reference](https://www.ncbi.nlm.nih.gov/data-hub/genome/GCA_025277285.1/)
 
 ## NCBI & Uniprot Databases
 
-Existing RNA-Seq data was retrieved from complete RNASeq data available in the [NCBI database](https://www.ncbi.nlm.nih.gov/) along wiht the reference genome. These very large, 'crowd sourced', and free sites provide the foundation for many types of molecular level work - give it a browse!  
+Existing RNA-Seq data was retrieved from complete RNASeq data available in the [NCBI database](https://www.ncbi.nlm.nih.gov/) along wiht the reference genome. These very large, 'crowd sourced', and free sites provide the foundation for many types of molecular level work - give it a browse!
 
-From this database I was able to select a refernce, and examples of broad categories of stressors; organic pharmaceutical contaminants like Valsartan (blood pressure medication) and Carbemazepine (seizure), endocrine disruptoring compounds like synthetic Estrogen, biotoxins like those created by harmful algal blooms, and finally abiotic stressors like hypoxia. 
+From this database I was able to select a refernce, and examples of broad categories of stressors; organic pharmaceutical contaminants like Valsartan (blood pressure medication) and Carbemazepine (seizure), endocrine disruptoring compounds like synthetic Estrogen, biotoxins like those created by harmful algal blooms, and finally abiotic stressors like hypoxia.
 
 # Workflow
 
@@ -70,13 +68,15 @@ flowchart LR
   D --> H[Uniprot & Blast -> What *are* the DEGs?]
   D --> I[Annotation & Functional Gene Enrichment -> Next Steps]
 ```
-[![ghicon](https://github.com/course-fish546-2023/chris-musselcon/blob/main/assets/ghicon.png?raw=true)]
-We've already covered the study organism and the data search - lets give a shoutout to the workhorse platforms of the show: GitHub and RStudio/ R. Both polatforms are free, can be connected, and keep you from accidentally 'losing' your work when you aren't using the best file structure practices. Check out [Happy Git](https://happygitwithr.com/) for more information on how this symbiotic relationship can be attained.  
+
+![ghicon](https://github.com/course-fish546-2023/chris-musselcon/blob/main/assets/ghicon.png?raw=true)  
+
+We've already covered the study organism and the data search - lets give a shoutout to the workhorse platforms of the show: GitHub and RStudio/ R. Both polatforms are free, can be connected, and keep you from accidentally 'losing' your work when you aren't using the best file structure practices. Check out [Happy Git](https://happygitwithr.com/) for more information on how this symbiotic relationship can be attained.
 
 ## RNASeq
 
-This is the type of sequence data I have available to work with from NCBI so I have to retrieve it. 
-### Pull out all of the sequences from the exposures.
+This is the type of sequence data I have available to work with from NCBI so I have to retrieve it. \### Pull out all of the sequences from the exposures.
+
 ```{bash}
 
 /home/shared/sratoolkit.3.0.2-ubuntu64/bin/./fasterq-dump \
@@ -90,6 +90,7 @@ SRR16771870
 ```
 
 ### Pulling my reference genome from prefab code provided by NCBI & verify where I am working
+
 ```{bash}
 
 cd ../data
@@ -107,17 +108,14 @@ curl -OJX GET "https://api.ncbi.nlm.nih.gov/datasets/v2alpha/genome/accession/GC
 unzip GCA_900618805.1.zip /chris-musselcon/data 
 
 ```
-:::
 
-## QC Note  
+## QC Note
 
-Even though I didn't  do this step, it is important and how it could be done with [MultiQC](https://multiqc.info/docs/).
-
-:::
+Even though I didn't do this step, it is important and how it could be done with [MultiQC](https://multiqc.info/docs/).
 
 ## Kallisto
 
-This process aligns my sequences to the reference to support DEG quantification.   
+This process aligns my sequences to the reference to support DEG quantification.
 ```{r, engine='bash', eval=TRUE}
 
  cd /home/shared/8TB_HDD_02/cnmntgna/GitHub/chris-musselcon/data/ncbi_dataset/data/GCA_900618805.1
@@ -138,7 +136,8 @@ Let's take a look
 head ../data/ncbi_dataset/data/GCA_900618805.1/cds_from_genomic.fna
 
 ```
-[![cds head](https://github.com/course-fish546-2023/chris-musselcon/blob/main/assets/reference_head.png?raw=true)]  
+
+![cds head](https://github.com/course-fish546-2023/chris-musselcon/blob/main/assets/reference_head.png?raw=true)
 
 ```{r, engine='bash', eval=TRUE}
 /home/shared/kallisto/kallisto quant
@@ -166,8 +165,7 @@ quant -i ../data/MGAL_cds.index \
 
 ```
 
-Getting length mean & SD for the single read sequences in the .fastq
-files. Code taken from: https://www.biostars.org/p/243552/
+Getting length mean & SD for the single read sequences in the .fastq files. Code taken from: https://www.biostars.org/p/243552/
 ```{bash}
 
 awk 'BEGIN { t=0.0;sq=0.0; n=0;} ;NR%4==2 {n++;L=length($0);t+=L;sq+=L*L;}END{m=t/n;printf("total %d avg=%f stddev=%f\n",n,m,sq/n-m*m);}' /home/shared/8TB_HDD_02/cnmntgna/GitHub/chris-musselcon/output/ncbi/*.fastq
@@ -260,15 +258,15 @@ head(deseq2.dds)
 
 ## Visualization
 
-This is an interim step to look at your DESeq data and see what is interesting/ make any general inferences.
-### PCA Plot
+This is an interim step to look at your DESeq data and see what is interesting/ make any general inferences. \### PCA Plot
 ```{r}
 
 vsd <- vst(deseq2.dds, blind = FALSE)
 plotPCA(vsd, intgroup = "condition")
 
 ```
-[![PCA](https://github.com/course-fish546-2023/chris-musselcon/blob/main/assets/pca.png?raw=true)]
+
+![PCA](https://github.com/course-fish546-2023/chris-musselcon/blob/main/assets/pca.png?raw=true)
 
 ```{r}
 
@@ -289,14 +287,15 @@ pheatmap(log_counts_top, scale = "row")
 
 ```
 
-Our PCA shows strong clustering and warrants further review.
-### Heatmap
+Our PCA shows strong clustering and warrants further review. \### Heatmap
+
 ```{r}
 #what are we doing here and how do I get it to compare the others against each other?
 head(deseq2.res)
 
 ```
-[![heatmap](https://github.com/course-fish546-2023/chris-musselcon/blob/main/assets/heatmap.png?raw=true)]
+
+![heatmap](https://github.com/course-fish546-2023/chris-musselcon/blob/main/assets/heatmap.png?raw=true)
 
 ```{r}
 
@@ -305,8 +304,7 @@ dim(deseq2.res[!is.na(deseq2.res$padj) & deseq2.res$padj <= 0.05, ])
 
 ```
 
-Our heatmap shows us the contaminant sequences labeled below the color blocks on the X-axis, and up-regulated (red) or down-regulated (blue) genes and the y-axis. When we go back and match the sequence numbers we see confirmation of the result of the PCA. Now we want to look at how many DEGs are statistically significant.
-### Volcano Plots
+Our heatmap shows us the contaminant sequences labeled below the color blocks on the X-axis, and up-regulated (red) or down-regulated (blue) genes and the y-axis. When we go back and match the sequence numbers we see confirmation of the result of the PCA. Now we want to look at how many DEGs are statistically significant. \### Volcano Plots
 ```{r}
 
 tmp <- deseq2.res
@@ -322,8 +320,8 @@ points(tmp.sig$baseMean, tmp.sig$log2FoldChange, pch=20, cex=0.45, col="red")
 abline(h=c(-1,1), col="blue")
 
 ```
-[![volcano](https://github.com/course-fish546-2023/chris-musselcon/blob/main/assets/volcano1.png?raw=true)]
 
+![volcano](https://github.com/course-fish546-2023/chris-musselcon/blob/main/assets/volcano1.png?raw=true)
 ```{r}
 
 # Prepare the data for plotting
@@ -346,10 +344,11 @@ volcano_plot <- ggplot(res_df, aes(x = log2FoldChange, y = -log10(padj), color =
 print(volcano_plot)
 
 ```
-[![volcano](https://github.com/course-fish546-2023/chris-musselcon/blob/main/assets/volcano.png?raw=true)]
 
+![volcano](https://github.com/course-fish546-2023/chris-musselcon/blob/main/assets/volcano.png?raw=true)
 
-Now we have something to work with, so we create a result table for futher work.
+Now we have something to work with, so we create a result table for further work.
+
 ```{r}
 
 write.table(tmp.sig, "../output/DEGlist.tab", sep = '\t', row.names = T)
@@ -360,7 +359,8 @@ write.table(tmp.sig, "../output/DEGlist.tab", sep = '\t', row.names = T)
 
 This will take my annotated reference gene sequence (cds file) and compare it to the result table of differentially expressed genes we created above and a reference of all the known proteins in the Uniprot protein database so we can blast them against each other and pick up what the functions of the DEGs may be.
 
-### Using BLAST  
+### Using BLAST
+
 This is the tool to compare my cds file and the uniprot database. Going to call my existing uniprot database made in week 2 to blast my cds file
 ```{r, engine='bash'}
 
@@ -374,6 +374,7 @@ This is the tool to compare my cds file and the uniprot database. Going to call 
 -max_target_seqs 1 \
 -outfmt 6
 ```
+
 ```{bash}
 
 head /home/shared/8TB_HDD_02/cnmntgna/data/cds_blastx.tab
@@ -381,6 +382,7 @@ head /home/shared/8TB_HDD_02/cnmntgna/data/cds_blastx.tab
 ```
 
 ### Tables on tables on tables!
+
 This is my annotated reference genome.
 ```{bash}
 
@@ -409,6 +411,7 @@ This is the list of DEGs generated from DESeq and will also be prepared for merg
 head -2 ../output/DEGlist.tab
 wc -l ../output/DEGlist.tab
 ```
+
 ```{bash}
 tr '|' '\t' < ../output/DEGlist.tab | head -2
 ```
@@ -423,13 +426,14 @@ tr '|' '\t' < ../output/DEGlist.tab \
 head ../data/DEGlist.tab
 
 ```
+
 ```{bash}
 
 head ../data/cds.tab
 
 ```
 
-Verify everything is formatted correctly 
+Verify everything is formatted correctly
 ```{r}
 getwd()
 cds <- read.table("/home/shared/8TB_HDD_02/cnmntgna/GitHub/chris-musselcon/data/cds.tab", sep = "\t", header = FALSE)
@@ -503,12 +507,11 @@ kbl(
 
 ```
 
-My table is acting up, so it will be a mystery until resolved.
-[![mystery table](https://github.com/course-fish546-2023/chris-musselcon/blob/main/assets/mysteryGO.png?raw=true)]  
+My table is acting up, so it will be a mystery until resolved. 
+![mystery table](https://github.com/course-fish546-2023/chris-musselcon/blob/main/assets/mysteryGO.png?raw=true)  
 
-## Next Steps  
+## Next Steps
 
-* Functional Gene Enrichment
-* Physiological inference
-* Preliminary conclusions & any further evaluation of targeted processes
-
+-   Functional Gene Enrichment
+-   Physiological inference
+-   Preliminary conclusions & any further evaluation of targeted processes
