@@ -232,7 +232,12 @@ library(kableExtra)
 library(knitr)
 library(dplyr)
 library(readr)
+#new table process
+full <-left_join(cdsDEG, uni, by = c("Column 2" = "Entry"))
+write.table(full, file = "/home/shared/8TB_HDD_02/cnmntgna/GitHub/chris-musselcon/data/annoblast.tab", sep = "\t", row.names = FALSE)
+```
 
+```{r}
 # Generate table
 kbl(
   head(
