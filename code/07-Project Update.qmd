@@ -514,4 +514,6 @@ My table is acting up, so it will be a mystery until resolved.
 
 -   Functional Gene Enrichment
 -   Physiological inference
--   Preliminary conclusions & any further evaluation of targeted processes
+-   Preliminary conclusions & any further evaluation of targeted processes  
+-   [RPubs link](https://rpubs.com/cmantegna/1039864)
+-   [![DOI](https://zenodo.org/badge/624256861.svg)](https://zenodo.org/badge/latestdoi/624256861)
