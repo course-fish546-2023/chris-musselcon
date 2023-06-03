@@ -54,7 +54,7 @@ Since I want to explore a 'hunch' before making larger experimental choices, it 
 
 Existing RNA-Seq data was retrieved from complete RNASeq data available in the [NCBI database](https://www.ncbi.nlm.nih.gov/) along wiht the reference genome. These very large, 'crowd sourced', and free sites provide the foundation for many types of molecular level work - give it a browse!
 
-From this database I was able to select a refernce, and examples of broad categories of stressors; organic pharmaceutical contaminants like Valsartan (blood pressure medication) and Carbemazepine (seizure), endocrine disruptoring compounds like synthetic Estrogen, biotoxins like those created by harmful algal blooms, and finally abiotic stressors like hypoxia.
+From this database I was able to select a reference, and examples of broad categories of stressors; organic pharmaceutical contaminants like Valsartan (blood pressure medication) and Carbemazepine (seizure), endocrine disruptoring compounds like synthetic Estrogen, biotoxins like those created by harmful algal blooms, and finally abiotic stressors like hypoxia.
 
 # Workflow
 
